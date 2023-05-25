@@ -1,5 +1,6 @@
 import chalk from 'chalk';
 import moment from 'moment';
+import config from '../config.js';
 
 export class Logger {
     log(level, message) {
@@ -23,6 +24,8 @@ export class Logger {
         console.log(this.log(chalk.bgRed.bold('ERR!'), message));
     }
     debug(message) {
-        console.log(this.log(chalk.magenta.bold('DBUG'), `[${chalk.gray('Debugger')}] ${message}`));
+        if (config.debug) {
+            console.log(this.log(chalk.magenta.bold('DBUG'), `[${chalk.gray('Debugger')}] ${message}`));
+        }
     }
 }

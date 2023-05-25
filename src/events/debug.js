@@ -7,6 +7,6 @@ export default {
      * @param {import('../helpers/Client.js').Client} client
      */
     run: async (client, message) => {
-        if (client.config.debug) client.logger.debug(message);
+        client.logger.debug(message);
     },
 };

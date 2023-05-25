@@ -3,8 +3,13 @@ import { Collection, Client as DiscordjsClient, REST, Routes } from 'discord.js'
 import path from 'path';
 import * as Utils from '../functions.js';
 import { Logger } from './Logger.js';
+// eslint-disable-next-line no-unused-vars
+import config from '../config.js';
 
 export class Client extends DiscordjsClient {
+    /**
+     * @param {config} clientConfig
+     */
     constructor(clientConfig = {}) {
         super({ intents: ['Guilds'] });
 
@@ -90,7 +95,7 @@ export class Client extends DiscordjsClient {
 
             await this.login(token)
                 .then(() => {
-                    if (this.config.debug) this.logger.debug(`${chalk.green('Token Logged in')}! starting the bot...`);
+                    this.logger.debug(`${chalk.green('Token Logged in')}! starting the bot...`);
                 })
                 .catch((err) => this.logger.error(err.stack));
         } catch (err) {
