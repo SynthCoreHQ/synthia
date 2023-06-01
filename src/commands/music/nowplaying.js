@@ -1,8 +1,8 @@
-import { EmbedBuilder } from 'discord.js';
+import { EmbedBuilder, bold, hyperlink, inlineCode } from 'discord.js';
 
 export default {
-    name: 'stop',
-    description: 'Wanna stop the music? Use me to do so!',
+    name: 'nowplaying',
+    description: 'Wanna check the current playing music? Use me to do so!',
     type: 1,
     cooldown: 5,
     category: 'Music',
@@ -26,11 +26,11 @@ export default {
                 });
             }
 
-            await queue.stop();
+            const song = queue.songs[0];
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                        .setTitle(`${client.emotes.right} | Stopped the music.`)
+                        .setTitle(`${client.emotes.right} | Now Playing: ${bold(inlineCode(song.name))}, by ${hyperlink(song.user.username, `https://discord.com/users/${song.user.id}`)}`)
                         .setColor(client.config.commands.embeds.aestheticColor),
                 ],
                 ephemeral: true,

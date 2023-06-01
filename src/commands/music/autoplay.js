@@ -1,8 +1,8 @@
 import { EmbedBuilder } from 'discord.js';
 
 export default {
-    name: 'stop',
-    description: 'Wanna stop the music? Use me to do so!',
+    name: 'autoplay',
+    description: 'Wanna toggle the autoplay? Use me to do so!',
     type: 1,
     cooldown: 5,
     category: 'Music',
@@ -26,11 +26,13 @@ export default {
                 });
             }
 
-            await queue.stop();
+            const autoplay = queue.toggleAutoplay();
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                        .setTitle(`${client.emotes.right} | Stopped the music.`)
+                        .setTitle(`${client.emotes.right} | Autoplay: \`${autoplay
+                            ? 'On'
+                            : 'Off'}\``)
                         .setColor(client.config.commands.embeds.aestheticColor),
                 ],
                 ephemeral: true,

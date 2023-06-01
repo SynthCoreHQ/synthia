@@ -27,37 +27,38 @@ export class DistubeClient {
                     .setCustomId('_prev')
                     .setEmoji(client.emotes.previous)
                     .setLabel('Previous')
-                    .setStyle(ButtonStyle.Primary);
+                    .setStyle(ButtonStyle.Success);
 
                 const _pauseRes = new ButtonBuilder()
                     .setCustomId('_pause')
                     .setEmoji(client.emotes.pause)
                     .setLabel('Pause')
-                    .setStyle(ButtonStyle.Primary);
+                    .setStyle(ButtonStyle.Success);
 
                 const _next = new ButtonBuilder()
                     .setCustomId('_next')
                     .setEmoji(client.emotes.next)
                     .setLabel('Next')
-                    .setStyle(ButtonStyle.Primary);
+                    .setStyle(ButtonStyle.Success);
 
                 const _stop = new ButtonBuilder()
                     .setCustomId('_stop')
                     .setEmoji(client.emotes.stop)
                     .setLabel('Stop')
-                    .setStyle(ButtonStyle.Danger);
+                    .setStyle(ButtonStyle.Success);
 
+                // eslint-disable-next-line no-unused-vars
                 const _loop = new ButtonBuilder()
                     .setCustomId('_loop')
                     .setEmoji(client.emotes.loop)
                     .setLabel('Loop')
-                    .setStyle(ButtonStyle.Primary);
+                    .setStyle(ButtonStyle.Success);
 
                 const _autoplay = new ButtonBuilder()
                     .setCustomId('_autoplay')
                     .setEmoji(client.emotes.autoplay)
                     .setLabel('Autoplay')
-                    .setStyle(ButtonStyle.Primary);
+                    .setStyle(ButtonStyle.Success);
 
                 const rowOne = new ActionRowBuilder().addComponents(
                     [
