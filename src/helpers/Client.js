@@ -1,21 +1,32 @@
 import chalk from 'chalk';
-import { Collection, Client as DiscordjsClient, REST, Routes } from 'discord.js';
+import {
+    Collection,
+    Client as DiscordjsClient,
+    REST,
+    Routes,
+} from 'discord.js';
+import { createRequire } from 'module';
 import path from 'path';
-import * as Utils from '../functions.js';
-import { Logger } from './Logger.js';
-// eslint-disable-next-line no-unused-vars
-import config from '../config.js';
+import * as Utils from '../util/functions.js';
+import { DistubeClient } from './modules/DistubeClient.js';
+import { data } from '../settings/data.js'; // eslint-disable-line no-unused-vars
+import { Logger } from './modules/Logger.js';
+
+const require = createRequire(import.meta.url);
 
 export class Client extends DiscordjsClient {
     /**
-     * @param {config} clientConfig
+     * @param {import('discord.js').ClientOptions} options
+     * @param {data} config
      */
-    constructor(clientConfig = {}) {
-        super({ intents: ['Guilds'] });
+    constructor(options, config) {
+        super(options);
 
-        this.config = clientConfig;
+        this.config = config;
         this.utils = Utils;
-        this.rest = new REST({ version: '10' }).setToken(process.env['BOT_TOKEN']);
+        this.emotes = require('../settings/emotes.json');
+        this.rest = new REST({ version: '10' }).setToken(this.config.token);
+        this.music = new DistubeClient(this);
         this.logger = new Logger();
         this.events = new Collection();
         this.commands = new Collection();
@@ -24,9 +35,9 @@ export class Client extends DiscordjsClient {
 
     async registerApplicationCommands() {
         const arrayOfCommands = [];
-        const route = this.config.commandDeployMode
-            ? Routes.applicationCommands(this.config.clientId)
-            : Routes.applicationGuildCommands(this.config.clientId, this.config.guildId);
+        const route = this.config.commands.deployGlobally
+            ? Routes.applicationCommands(this.config.id)
+            : Routes.applicationGuildCommands(this.config.id, this.config.developmentGuildId); // eslint-disable-line max-len
 
         try {
             const files = this.utils.getFiles(path.join(process.cwd(), 'src', 'commands'));
@@ -34,19 +45,12 @@ export class Client extends DiscordjsClient {
             for (const file of files) {
                 const command = await import(`file://${file}`).then((res) => res.default);
 
-                arrayOfCommands.push(command.data.toJSON());
+                arrayOfCommands.push(command);
             }
 
             this.rest
                 .put(route, { body: arrayOfCommands })
-                .then((data) =>
-                    this.logger.info(
-                        chalk.redBright('Interactions'),
-                        `(${data.length}) commands registered ${
-                            this.config.commandDeployMode ? 'globally' : 'locally'
-                        }.`,
-                    ),
-                );
+                .then((x) => this.logger.info(chalk.redBright('Interactions'), `(${x.length}) commands registered.`));
         } catch (err) {
             this.logger.error(err.stack);
         }
@@ -61,7 +65,7 @@ export class Client extends DiscordjsClient {
                 const command = await import(`file://${file}`).then((res) => res.default);
 
                 count++;
-                this.commands.set(command.data.name, command);
+                this.commands.set(command.name, command);
             }
 
             this.logger.info(chalk.yellowBright('Commands'), `(${count}) commands loaded.`);
@@ -80,7 +84,12 @@ export class Client extends DiscordjsClient {
 
                 count++;
                 this.events.set(event.name, event);
-                this.on(event.name, (...args) => event.run(this, ...args));
+
+                if (event.once) {
+                    this.once(event.name, (...args) => event.run(this, ...args)); // eslint-disable-line max-len
+                } else {
+                    this.on(event.name, (...args) => event.run(this, ...args));
+                }
             }
 
             this.logger.info(chalk.yellowBright('Events'), `(${count}) events loaded.`);
@@ -91,7 +100,9 @@ export class Client extends DiscordjsClient {
 
     async authenticate(token) {
         try {
-            if (!token) throw new Error('No Client Token was provided.');
+            if (!token) {
+                throw new Error('No Client Token was provided.');
+            }
 
             await this.login(token)
                 .then(() => {

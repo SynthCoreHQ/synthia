@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-export function getFiles(directory) {
+export const getFiles = (directory) => {
     let res = [];
     const dirents = fs.readdirSync(directory, { withFileTypes: true });
 
@@ -14,4 +14,4 @@ export function getFiles(directory) {
     }
 
     return res;
-}
+};

@@ -41,11 +41,35 @@ Start the server
 
 To run this project, you will need to add the following environment variables to your .env file
 
-`BOT_TOKEN`
+`CLIENT_ID`
 
-`BOT_ID`
+`ALPHA_CLIENT_ID`
+
+`CLIENT_INVITE_URL`
+
+`ALPHA_CLIENT_INVITE_URL`
+
+`CLIENT_TOKEN`
+
+`ALPHA_CLIENT_TOKEN`
+
+`CLIENT_SECRET`
+
+`ALPHA_CLIENT_SECRET`
+
+`CLIENT_ICON`
+
+`ALPHA_CLIENT_ICON`
 
 `GUILD_ID`
+
+`GUILD_INVITE_CODE`
+
+`DEV_GUILD_ID`
+
+`COMMAND_PREFIX`
+
+`SERVER_PORT`
 
 ## Authors
 

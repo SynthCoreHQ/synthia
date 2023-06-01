@@ -1,18 +1,28 @@
-import { ActionRowBuilder, ButtonBuilder, ButtonStyle, EmbedBuilder, SlashCommandBuilder } from 'discord.js';
+import {
+    ActionRowBuilder,
+    ApplicationCommandOptionType,
+    ButtonBuilder,
+    ButtonStyle,
+    EmbedBuilder,
+} from 'discord.js';
 
 export default {
-    data: new SlashCommandBuilder()
-        .setName('avatar')
-        .setDescription("Trying to spy avatar's? Use me to see user avatar's")
-        .addUserOption((option) => option.setName('user').setDescription("Who's the user?"))
-        .setDMPermission(true),
-    options: {
-        developerOnly: false,
-        disabled: false,
-        ownerOnly: false,
-        category: 'Utility',
-        cooldown: 5,
-    },
+    name: 'avatar',
+    description: "Trying to spy avatar's? Use me to see user avatar's",
+    type: 1,
+    aliases: [],
+    options: [
+        {
+            name: 'user',
+            description: "Who's the user?",
+            type: ApplicationCommandOptionType.User,
+        },
+    ],
+    cooldown: 5,
+    category: 'Utility',
+    ownerOnly: false,
+    disabled: false,
+    developerOnly: false,
 
     /**
      * @param {import('../../helpers/Client.js').Client} client
@@ -21,19 +31,23 @@ export default {
     run: async (client, interaction) => {
         const o = interaction.options.getUser('user');
 
-        const user = o ? await o.fetch() : await interaction.user.fetch();
+        const user = o
+            ? await o.fetch()
+            : await interaction.user.fetch();
 
         const avatarEmbed = new EmbedBuilder()
             .setTitle(user.username)
             .setImage(user.displayAvatarURL({ forceStatic: false, size: 512 }))
-            .setColor(client.config.embeds.color.primary);
+            .setColor(client.config.commands.embeds.color);
 
         const avatarButtonComponent = new ButtonBuilder()
             .setLabel('Avatar URL')
             .setStyle(ButtonStyle.Link)
             .setURL(user.avatarURL({ size: 512, forceStatic: false }));
 
-        const actionRow = new ActionRowBuilder().addComponents(avatarButtonComponent);
+        const actionRow = new ActionRowBuilder().addComponents(
+            avatarButtonComponent,
+        );
 
         return await interaction.reply({
             embeds: [avatarEmbed],

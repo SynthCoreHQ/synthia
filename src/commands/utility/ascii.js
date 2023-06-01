@@ -1,20 +1,25 @@
-import { SlashCommandBuilder } from 'discord.js';
+import { ApplicationCommandOptionType } from 'discord.js';
 import figlet from 'figlet';
 
 export default {
-    data: new SlashCommandBuilder()
-        .setName('ascii')
-        .setDescription('Wanna convert your text to a cool looking ascii art? Use me to do so!')
-        .addStringOption((option) =>
-            option.setName('text').setDescription('What text are we converting?').setRequired(true).setMaxLength(2000),
-        ),
-    options: {
-        developerOnly: false,
-        disabled: false,
-        ownerOnly: false,
-        category: 'Utility',
-        cooldown: 5,
-    },
+    name: 'ascii',
+    description: 'Wanna convert your text to a cool looking ascii art? Use me to do so!',
+    type: 1,
+    aliases: [],
+    options: [
+        {
+            name: 'text',
+            description: 'What text are we converting?',
+            type: ApplicationCommandOptionType.String,
+            required: true,
+            max_length: 2000, // eslint-disable-line camelcase
+        },
+    ],
+    cooldown: 5,
+    category: 'Utility',
+    ownerOnly: false,
+    disabled: false,
+    developerOnly: false,
 
     /**
      * @param {import('../../helpers/Client.js').Client} client
@@ -27,13 +32,23 @@ export default {
             if (err) {
                 client.logger.error(err);
                 return await interaction.reply({
-                    embeds: [{ description: 'Something went wrong.', color: client.config.embeds.color.secondary }],
+                    embeds: [
+                        {
+                            description: 'Something went wrong.',
+                            color: client.config.commands.embeds.color,
+                        },
+                    ],
                     ephemeral: true,
                 });
             }
 
             await interaction.reply({
-                embeds: [{ description: ['```', data, '```'].join('\n'), color: client.config.embeds.color.secondary }],
+                embeds: [
+                    {
+                        description: ['```', data, '```'].join('\n'),
+                        color: client.config.commands.embeds.color,
+                    },
+                ],
             });
         });
     },
