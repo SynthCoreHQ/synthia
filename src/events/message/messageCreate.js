@@ -1,4 +1,4 @@
-import { EmbedBuilder, Events } from 'discord.js';
+import { EmbedBuilder, Events, codeBlock } from 'discord.js';
 import { Afk } from '../../models/afk.js';
 
 export default {
@@ -19,19 +19,26 @@ export default {
                             .setTitle(client.config.commands.embeds.title.replace(/{text}/, 'Introduction'))
                             .setDescription([
                                 `Hey ${message.author}, Do you need any kind of help?`,
-                                '',
-                                `Prefix: ${defaultPrefix}`,
-                                '',
-                                `${client.emotes.info} Modules`,
-                                '> 1. Utility',
-                                '> 2. Music',
-                                '> 3. Administration',
-                                '> 4. Moderation',
-                                '> 5. Configuration',
                             ].join('\n'))
+                            .addFields([
+                                {
+                                    name: 'Prefix',
+                                    value: `${codeBlock(defaultPrefix)}`,
+                                },
+                                {
+                                    name: 'Modules',
+                                    value: [
+                                        '> 1. Utility',
+                                        '> 2. Music',
+                                        '> 3. Moderation',
+                                        '> 4. Configuration',
+                                        '> 5. Administration',
+                                    ].join('\n'),
+                                },
+                            ])
                             .setThumbnail(client.config.icon)
                             .setColor(client.config.commands.embeds['aestheticColor'])
-                            .setTimestamp(),
+                            .setFooter({ text: client.config.commands.embeds.footer.replace(/{text}/, 'SynthCore') }),
                     ],
                 });
             } catch (er) {
