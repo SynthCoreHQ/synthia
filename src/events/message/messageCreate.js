@@ -11,6 +11,34 @@ export default {
     run: async (client, message) => {
         const defaultPrefix = client.config.commands.globalPrefix;
 
+        if (message.mentions.members.some(x => x.id === client.user.id)) {
+            try {
+                await message.reply({
+                    embeds: [
+                        new EmbedBuilder()
+                            .setTitle(client.config.commands.embeds.title.replace(/{text}/, 'Introduction'))
+                            .setDescription([
+                                `Hey ${message.author}, Do you need any kind of help?`,
+                                '',
+                                `Prefix: ${defaultPrefix}`,
+                                '',
+                                `${client.emotes.info} Modules`,
+                                '> 1. Utility',
+                                '> 2. Music',
+                                '> 3. Administration',
+                                '> 4. Moderation',
+                                '> 5. Configuration',
+                            ].join('\n'))
+                            .setThumbnail(client.config.icon)
+                            .setColor(client.config.commands.embeds['aestheticColor'])
+                            .setTimestamp(),
+                    ],
+                });
+            } catch (er) {
+                client.logger.error(er);
+            }
+        }
+
         if (
             message.author.bot
             || !message.guild
@@ -26,30 +54,6 @@ export default {
 
         if (!cmd) {
             return;
-        }
-
-        if (message.mentions.members.has(client.user.id)) {
-            return await message.reply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setTitle(client.config.commands.embeds.title.replace(/{text}/, 'Introduction'))
-                        .setDescription([
-                            `Hey ${message.author}, Do you need any kind of help?`,
-                            '',
-                            `Prefix: ${defaultPrefix}`,
-                            '',
-                            `${client.emotes.info} Modules`,
-                            '5. Utility',
-                            '4. Music',
-                            '1. Administration',
-                            '2. Moderation',
-                            '3. Configuration',
-                        ].join('\n'))
-                        .setThumbnail(client.config.icon)
-                        .setColor(client.config.commands.embeds.aestheticColor)
-                        .setTimestamp(),
-                ],
-            });
         }
 
         const afkData = await Afk.findOne({ where: { id: message.author.id } });
