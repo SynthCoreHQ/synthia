@@ -28,7 +28,7 @@ const data = {
             title: 'Synthia | {text}',
             footer: 'Made with 💖 by {text}',
             color: 0x2b2d31,
-            aestheticColor: 0xe4aefc /* 0x7c3eff */ /* 0x7800ff */,
+            aestheticColor: 0xab60ff /* 0xe4aefc */,
         },
     },
     voice: {
