@@ -3,7 +3,7 @@ import { ApplicationCommandType } from 'discord.js';
 
 export class InteractionCommand {
     /**
-     * @param {import('../helpers/Client.js').Client} DiscordjsClient
+     * @param {import('../Client.js').Client} DiscordjsClient
      */
     constructor(DiscordjsClient) {
         this.client = DiscordjsClient;

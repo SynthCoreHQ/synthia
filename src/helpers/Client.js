@@ -1,7 +1,6 @@
 import chalk from 'chalk';
 import { Collection, Client as DiscordjsClient, REST } from 'discord.js';
 import { createRequire } from 'module';
-import * as Utils from '../util/functions.js';
 import { DistubeClient } from './modules/DistubeClient.js';
 import { data } from '../settings/data.js'; // eslint-disable-line no-unused-vars
 import { Logger } from './modules/Logger.js';
@@ -20,7 +19,6 @@ export class Client extends DiscordjsClient {
         super(options);
 
         this.config = config;
-        this.utils = Utils;
         this.emotes = require('../settings/emotes.json');
         this.rest = new REST({ version: '10' }).setToken(this.config.token);
         this.eventHandler = new EventHandler(this);

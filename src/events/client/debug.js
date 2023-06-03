@@ -12,6 +12,10 @@ export default class DebugEvent extends BaseEvent {
      * @param {string} message
      */
     async executeEvent(message) {
-        this.client.logger.debug(message);
+        try {
+            this.client.logger.debug(message);
+        } catch (err) {
+            this.client.logger.error(err);
+        }
     }
 }

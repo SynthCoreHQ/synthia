@@ -1,21 +1,21 @@
 import { EmbedBuilder } from 'discord.js';
+import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 
-export default {
-    name: 'disconnect',
-    description: 'Dont want me in the voice channel? Use me to disconnect me!',
-    type: 1,
-    cooldown: 5,
-    category: 'Music',
-    inVoice: true,
-    disabled: false,
-    ownerOnly: false,
-    developerOnly: false,
+export default class DisconnectCommand extends InteractionCommand {
+    constructor(DiscordjsClient) {
+        super(DiscordjsClient);
+
+        this.name = 'disconnect';
+        this.description = 'Dont want me in the voice channel? Use me to disconnect me!';
+        this.module = 'Music';
+    }
 
     /**
-     * @param {import('../../helpers/Client.js').Client} client
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
-    run: async (client, interaction) => {
+    async executeCommand(interaction) {
+        const { client } = this;
+
         try {
             client.music.voices.leave(interaction.guild);
 
@@ -30,5 +30,5 @@ export default {
         } catch (e) {
             client.logger.error(e.stack);
         }
-    },
-};
+    }
+}

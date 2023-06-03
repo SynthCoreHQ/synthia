@@ -1,21 +1,21 @@
 import { EmbedBuilder, bold, hyperlink, inlineCode } from 'discord.js';
+import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 
-export default {
-    name: 'nowplaying',
-    description: 'Wanna check the current playing music? Use me to do so!',
-    type: 1,
-    cooldown: 5,
-    category: 'Music',
-    inVoice: true,
-    disabled: false,
-    ownerOnly: false,
-    developerOnly: false,
+export default class NowplayingCommand extends InteractionCommand {
+    constructor(DiscordjsClient) {
+        super(DiscordjsClient);
+
+        this.name = 'nowplaying';
+        this.description = 'Wanna check the current playing music? Use me to do so!';
+        this.module = 'Music';
+    }
 
     /**
-     * @param {import('../../helpers/Client.js').Client} client
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
-    run: async (client, interaction) => {
+    async executeCommand(interaction) {
+        const { client } = this;
+
         try {
             const queue = client.music.getQueue(interaction.guild);
 
@@ -38,5 +38,5 @@ export default {
         } catch (e) {
             client.logger.error(e.stack);
         }
-    },
-};
+    }
+}

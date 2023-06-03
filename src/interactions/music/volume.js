@@ -1,30 +1,29 @@
 import { ApplicationCommandOptionType, EmbedBuilder } from 'discord.js';
+import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 
-export default {
-    name: 'volume',
-    description: 'Wanna adjust the music volume? Use me to do so!',
-    options: [
-        {
-            name: 'input',
-            description: 'Specify a digit between 0-100',
-            type: ApplicationCommandOptionType.Integer,
-            min_value: 1, // eslint-disable-line camelcase
-            max_value: 100, // eslint-disable-line camelcase
-        },
-    ],
-    type: 1,
-    cooldown: 5,
-    category: 'Music',
-    inVoice: true,
-    disabled: false,
-    ownerOnly: false,
-    developerOnly: false,
+export default class VolumeCommand extends InteractionCommand {
+    constructor(DiscordjsClient) {
+        super(DiscordjsClient);
+
+        this.name = 'volume';
+        this.description = 'Wanna adjust the music volume? Use me to do so!';
+        this.module = 'Music';
+        this.options = [
+            {
+                name: 'input',
+                description: 'Specify a digit between 0-100',
+                type: ApplicationCommandOptionType.Integer,
+                min_value: 1, // eslint-disable-line camelcase
+                max_value: 100, // eslint-disable-line camelcase
+            },
+        ];
+    }
 
     /**
-     * @param {import('../../helpers/Client.js').Client} client
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
-    run: async (client, interaction) => {
+    async executeCommand(interaction) {
+        const { client } = this;
         const volume = interaction.options.getInteger('input');
 
         try {
@@ -55,5 +54,5 @@ export default {
         } catch (e) {
             client.logger.error(e.stack);
         }
-    },
-};
+    }
+}

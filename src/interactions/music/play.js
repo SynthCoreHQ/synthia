@@ -1,29 +1,28 @@
 import { ApplicationCommandOptionType } from 'discord.js';
+import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 
-export default {
-    name: 'play',
-    description: 'Wanna listen to some music? Use me to do so!',
-    type: 1,
-    options: [
-        {
-            name: 'query',
-            description: 'Any song name in mind?',
-            type: ApplicationCommandOptionType.String,
-            required: true,
-        },
-    ],
-    cooldown: 5,
-    category: 'Utility',
-    inVoice: true,
-    disabled: false,
-    ownerOnly: false,
-    developerOnly: false,
+export default class PlayCommand extends InteractionCommand {
+    constructor(DiscordjsClient) {
+        super(DiscordjsClient);
+
+        this.name = 'play';
+        this.description = 'Wanna listen some songs? Use me to do so!';
+        this.module = 'Music';
+        this.options = [
+            {
+                name: 'query',
+                description: 'Any song name in mind?',
+                type: ApplicationCommandOptionType.String,
+                required: true,
+            },
+        ];
+    }
 
     /**
-     * @param {import('../../helpers/Client.js').Client} client
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
-    run: async (client, interaction) => {
+    async executeCommand(interaction) {
+        const { client } = this;
         const query = interaction.options.getString('query');
 
         try {
@@ -47,5 +46,5 @@ export default {
         } catch (e) {
             client.logger.error(e.stack);
         }
-    },
-};
+    }
+}

@@ -1,0 +1,67 @@
+{
+	// Place your synthia workspace snippets here. Each snippet is defined under a snippet name and has a scope, prefix, body and 
+	// description. Add comma separated ids of the languages where the snippet is applicable in the scope field. If scope 
+	// is left empty or omitted, the snippet gets applied to all languages. The prefix is what is 
+	// used to trigger the snippet and the body will be expanded and inserted. Possible variables are: 
+	// $1, $2 for tab stops, $0 for the final cursor position, and ${1:label}, ${2:another} for placeholders. 
+	// Placeholders with the same ids are connected.
+	// Example:
+	"Creates a InteractionCommand class": {
+		"scope": "javascript",
+		"prefix": "sic",
+		"body": [
+			"import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';",
+			"",
+			"export default class $1Command extends InteractionCommand {",
+			"\tconstructor(DiscordjsClient) {",
+			"\t\tsuper(DiscordjsClient);",
+			"\t\tthis.name = '$2';",
+			"\t\tthis.description = '$3';",
+			"\t\tthis.module = 'Moderation';",
+			"\t}",
+			"",
+			"\t/**",
+			"\t* @param {import('discord.js').ChatInputCommandInteraction} interaction",
+			"\t*/",
+			"\tasync executeCommand(interaction) {",
+			"\t\ttry {",
+			"\t\t\treturn await interaction.reply('This command is under development right now!');",
+			"\t\t} catch (e) {",
+			"\t\t\tthis.client.logger.error(e);",
+			"\t\t}",
+			"\t}",
+			"}",
+			""
+		],
+		"description": "Creates a InteractionCommand class"
+	},
+	"Creates a Discordjs event class": {
+		"scope": "javascript",
+		"prefix": "sec",
+		"body": [
+			"import { Events } from 'discord.js';",
+			"import { BaseEvent } from '../../helpers/base/BaseEvent.js';",
+			"",
+			"export default class $1Event extends BaseEvent {",
+			"\tconstructor(DiscordjsClient) {",
+			"\t\tsuper(DiscordjsClient);",
+			"",
+			"\t\tthis.name = '$2';",
+			"\t}",
+			"",
+			"\t/**",
+			"\t* @param {string} message",
+			"\t*/",
+			"\tasync executeEvent(message) {",
+			"\t\ttry {",
+			"\t\t\t// ...",
+			"\t\t} catch (e) {",
+			"\t\t\tthis.client.logger.error(e);",
+			"\t\t}",
+			"\t}",
+			"}",
+			""
+		],
+		"description": "Creates a Discordjs event class"
+	}
+}
