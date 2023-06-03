@@ -17,7 +17,7 @@ export default {
      */
     run: async (client, interaction) => {
         try {
-            const queue = client.music.client.getQueue(interaction.guild);
+            const queue = client.music.getQueue(interaction.guild);
 
             if (!queue) {
                 return await interaction.reply({

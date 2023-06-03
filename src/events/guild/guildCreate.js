@@ -1,13 +1,17 @@
 import { Events } from 'discord.js';
+import { BaseEvent } from '../../helpers/base/BaseEvent.js';
 
-export default {
-    name: Events.GuildCreate,
+export default class GuildCreateEvent extends BaseEvent {
+    constructor(DiscordjsClient) {
+        super(DiscordjsClient);
+
+        this.name = Events.GuildCreate;
+    }
 
     /**
-     * @param {import('../../helpers/Client.js').Client} client
      * @param {import('discord.js').Guild} guild
      */
-    run: async (client, guild) => {
-        client.logger.warn(`Joined! ${guild.name}`);
-    },
-};
+    async executeEvent(guild) {
+        this.client.logger.warn(`Joined: ${guild.name}`);
+    }
+}

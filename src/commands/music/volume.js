@@ -28,7 +28,7 @@ export default {
         const volume = interaction.options.getInteger('input');
 
         try {
-            const queue = client.music.client.getQueue(interaction.guild);
+            const queue = client.music.getQueue(interaction.guild);
 
             if (!queue) {
                 return await interaction.reply({

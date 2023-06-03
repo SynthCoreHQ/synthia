@@ -1,14 +1,21 @@
 import { EmbedBuilder, Events, codeBlock } from 'discord.js';
 import { Afk } from '../../models/afk.js';
+import { BaseEvent } from '../../helpers/base/BaseEvent.js';
 
-export default {
-    name: Events.MessageCreate,
+export default class MessageCreateEvent extends BaseEvent {
+    constructor(DiscordjsClient) {
+        super(DiscordjsClient);
+
+        this.name = Events.MessageCreate;
+    }
+
     /**
-     * @param {import('../../helpers/Client.js').Client} client
      * @param {import('discord.js').Message} message
      */
     // eslint-disable-next-line max-statements
-    run: async (client, message) => {
+    async executeEvent(message) {
+        const { client } = this;
+
         const defaultPrefix = client.config.commands.globalPrefix;
 
         if (message.mentions.members.some(x => x.id === client.user.id)) {
@@ -103,5 +110,5 @@ export default {
         } catch (e) {
             client.logger.error(e);
         }
-    },
-};
+    }
+}

@@ -27,7 +27,7 @@ export default {
         const query = interaction.options.getString('query');
 
         try {
-            client.music.client.play(interaction.member.voice.channel, query, {
+            client.music.play(interaction.member.voice.channel, query, {
                 member: interaction.member,
                 textChannel: interaction.channel,
             });

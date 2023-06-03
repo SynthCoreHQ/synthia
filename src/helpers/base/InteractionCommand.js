@@ -1,20 +1,20 @@
+import chalk from 'chalk';
+import { ApplicationCommandType } from 'discord.js';
+
 export class InteractionCommand {
     /**
-     * InteractionComman class constructor.
-     * @param {import('../Client.js').Client} DiscordjsClient
-     * @param {{ name: string }} param1
+     * @param {import('../helpers/Client.js').Client} DiscordjsClient
      */
-    constructor(DiscordjsClient, { name, description }) {
+    constructor(DiscordjsClient) {
         this.client = DiscordjsClient;
-        this.name = name;
-        this.description = description;
+
+        this.type = ApplicationCommandType.ChatInput;
+        this.module = 'Miscellaneous';
+        this.cooldown = 5_000;
+        this.disabled = false;
     }
 
-    /**
-     * @param {this.client} client
-     * @param  {...any} args
-     */
-    run(client, ...args) {
-        throw new Error("Method 'run' not found.");
+    async executeCommand() {
+        throw new Error(`Class ${chalk.redBright(this.constructor.name)} doesn't have a ${chalk.yellowBright('executeCommand')} method.`);
     }
 }

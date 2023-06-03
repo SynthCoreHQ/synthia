@@ -1,16 +1,23 @@
 import { Events } from 'discord.js';
+import { BaseEvent } from '../../helpers/base/BaseEvent.js';
 
-export default {
-    name: Events.InteractionCreate,
+export default class InteractionCreateEvent extends BaseEvent {
+    constructor(DiscordjsClient) {
+        super(DiscordjsClient);
+
+        this.name = Events.InteractionCreate;
+    }
+
     /**
-     * @param {import('../../helpers/Client.js').Client} client
      * @param {import('discord.js').BaseInteraction} interaction
      */
     // eslint-disable-next-line max-statements
-    run: async (client, interaction) => {
+    async executeEvent(interaction) {
+        const { client } = this;
+
         if (interaction.isChatInputCommand()) {
             try {
-                const command = client.commands.get(interaction.commandName);
+                const command = client.interactionCommands.get(interaction.commandName); // eslint-disable-line max-len
 
                 if (!command) {
                     return interaction.reply({
@@ -62,7 +69,7 @@ export default {
                     });
                 }
 
-                command.run(client, interaction);
+                command.executeCommand(interaction);
             } catch (err) {
                 client.logger.error(err);
                 return await interaction.reply({
@@ -71,7 +78,7 @@ export default {
             }
         } else if (interaction.isButton()) {
             if (interaction.customId === '_pause') {
-                const queue = client.music.client.getQueue(interaction.guild);
+                const queue = client.music.getQueue(interaction.guild);
 
                 if (!queue) {
                     return await interaction.reply({
@@ -104,7 +111,7 @@ export default {
             }
 
             if (interaction.customId === '_prev') {
-                const queue = client.music.client.getQueue(interaction.guild);
+                const queue = client.music.getQueue(interaction.guild);
 
                 if (!queue) {
                     return await interaction.reply({
@@ -128,7 +135,7 @@ export default {
             }
 
             if (interaction.customId === '_next') {
-                const queue = client.music.client.getQueue(interaction.guild);
+                const queue = client.music.getQueue(interaction.guild);
 
                 if (!queue) {
                     return await interaction.reply({
@@ -145,7 +152,7 @@ export default {
             }
 
             if (interaction.customId === '_autoplay') {
-                const queue = client.music.client.getQueue(interaction.guild);
+                const queue = client.music.getQueue(interaction.guild);
 
                 if (!queue) {
                     return await interaction.reply({
@@ -164,7 +171,7 @@ export default {
             }
 
             if (interaction.customId === '_stop') {
-                const queue = client.music.client.getQueue(interaction.guild);
+                const queue = client.music.getQueue(interaction.guild);
 
                 if (!queue) {
                     return await interaction.reply({
@@ -180,6 +187,5 @@ export default {
                 });
             }
         }
-
-    },
-};
+    }
+}

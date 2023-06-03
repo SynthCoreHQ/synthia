@@ -17,7 +17,7 @@ export default {
      */
     run: async (client, interaction) => {
         try {
-            client.music.client.voices.leave(interaction.guild);
+            client.music.voices.leave(interaction.guild);
 
             await interaction.reply({
                 embeds: [
