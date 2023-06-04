@@ -23,7 +23,7 @@ export class DistubeClient extends DisTube {
 
         this.DiscordClient = DiscordjsClient;
 
-        this.DiscordClient
+        this
             .on('playSong', (queue, song) => {
                 const _prev = new ButtonBuilder()
                     .setCustomId('_prev')
