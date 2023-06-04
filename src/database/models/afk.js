@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { database } from '../index.js';
+import { database } from '../database.js';
 
 export const Afk = database.define(
     'afk',

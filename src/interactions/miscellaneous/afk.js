@@ -1,5 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js';
-import { Afk } from '../../models/afk.js';
+import { Afk } from '../../database/models/afk.js';
 import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 
 export default class AfkCommand extends InteractionCommand {

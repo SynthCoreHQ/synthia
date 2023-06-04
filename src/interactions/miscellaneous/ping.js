@@ -12,8 +12,25 @@ export default class PingCommand extends InteractionCommand {
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
     async executeCommand(interaction) {
+        const { config } = this.client;
+
         try {
-            await interaction.reply({ embeds: [{ title: `My ping is: ${this.client.ws.ping}ms`, color: this.client.config.commands.embeds.aestheticColor }] });
+            await interaction.reply({ embeds: [{ title: 'Pinging...', color: this.client.config.commands.embeds.aestheticColor }] }).then(
+                async (msg) => {
+                    await msg.edit({
+                        embeds: [
+                            {
+                                title: config.commands.embeds.title.replace(/{text}/, 'Ping'),
+                                description: [
+                                    '> **Websocket Ping**: {ping}ms'.replace(/{ping}/, this.client.ws.ping),
+                                    '> **Api Latency**: {latency}ms'.replace(/{latency}/, (msg.createdTimestamp - interaction.createdTimestamp)),
+                                ].join('\n'),
+                                color: config.commands.embeds.aestheticColor,
+                            },
+                        ],
+                    });
+                },
+            );
         } catch (e) {
             this.client.logger.error(e);
         }

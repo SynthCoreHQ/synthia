@@ -87,9 +87,11 @@ export default class HelpCommand extends InteractionCommand {
                             `> **Name**: ${specificCommand.name}`,
                             `> **Description**: ${specificCommand.description}`,
                             `> **Usage**: ${specificCommand.example}`,
-                            `> **Module**: ${specificCommand.category}`,
+                            `> **Module**: ${specificCommand.module}`,
                             `> **Cooldown**: ${specificCommand.cooldown}`,
-                            `> **Options**: ${specificCommand.options.map(opt => inlineCode(opt.name)).join(', ')}`,
+                            `> **Options**: ${specificCommand.options
+                                ? specificCommand.options.map(opt => inlineCode(opt.name)).join(', ') :
+                                'No Options'}`,
                             // `> Is Disabled: ${specificCommand.disabled}`,
                             // `> Is Owner Only: ${specificCommand.ownerOnly}`,
                             // `> Is Developer Only: ${specificCommand.developerOnly}`,

@@ -1,5 +1,5 @@
 import { EmbedBuilder, Events, codeBlock } from 'discord.js';
-import { Afk } from '../../models/afk.js';
+import { Afk } from '../../database/models/afk.js';
 import { BaseEvent } from '../../helpers/base/BaseEvent.js';
 
 export default class MessageCreateEvent extends BaseEvent {

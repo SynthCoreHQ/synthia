@@ -1,6 +1,6 @@
 import chalk from 'chalk';
 import { ActivityType, Events } from 'discord.js';
-import { Afk } from '../../models/afk.js';
+import { Afk } from '../../database/models/afk.js';
 import { BaseEvent } from '../../helpers/base/BaseEvent.js';
 
 export default class ReadyEvent extends BaseEvent {

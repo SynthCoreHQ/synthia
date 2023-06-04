@@ -7,7 +7,6 @@ import { Logger } from './modules/Logger.js';
 import { EventHandler } from './modules/EventHandler.js';
 import { InteractionHandler } from './modules/InteractionHandler.js';
 
-
 const require = createRequire(import.meta.url);
 
 export class Client extends DiscordjsClient {

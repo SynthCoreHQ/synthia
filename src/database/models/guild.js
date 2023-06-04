@@ -1,5 +1,5 @@
 import { DataTypes } from 'sequelize';
-import { database } from '../index.js';
+import { database } from '../database.js';
 
 export const Guild = database.define(
     'guild',
@@ -10,8 +10,12 @@ export const Guild = database.define(
         },
         prefix: {
             type: DataTypes.STRING,
-            defaultValue: '!',
+            defaultValue: '&',
             allowNull: false,
+        },
+        welcomeChannelId: {
+            type: DataTypes.STRING,
+            unique: true,
         },
     },
     {
