@@ -24,7 +24,7 @@ export default class HelpCommand extends InteractionCommand {
 
         try {
             if (!command) {
-                const commands = this.client.interaction.map((cmd) => inlineCode(cmd.name)).join(', ');
+                const commands = this.client.interactionCommands.map((cmd) => inlineCode(cmd.name)).join(', ');
 
                 return await interaction.reply({
                     embeds: [
