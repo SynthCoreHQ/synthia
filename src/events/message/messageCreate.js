@@ -53,23 +53,6 @@ export default class MessageCreateEvent extends BaseEvent {
             }
         }
 
-        if (
-            message.author.bot
-            || !message.guild
-            || !message.content.startsWith(defaultPrefix)
-
-        ) {
-            return;
-        }
-
-        const args = message.content.slice(defaultPrefix.length).trim().split(/ +/g); // eslint-disable-line max-len
-        const command = args.shift().toLowerCase();
-        const cmd = client.commands.get(command);
-
-        if (!cmd) {
-            return;
-        }
-
         const afkData = await Afk.findOne({ where: { id: message.author.id } });
 
         if (afkData) {
@@ -104,6 +87,23 @@ export default class MessageCreateEvent extends BaseEvent {
                 }
             }
         });
+
+        if (
+            message.author.bot
+            || !message.guild
+            || !message.content.startsWith(defaultPrefix)
+
+        ) {
+            return;
+        }
+
+        const args = message.content.slice(defaultPrefix.length).trim().split(/ +/g); // eslint-disable-line max-len
+        const command = args.shift().toLowerCase();
+        const cmd = client.commands.get(command);
+
+        if (!cmd) {
+            return;
+        }
 
         try {
             cmd.execute(client, message);
