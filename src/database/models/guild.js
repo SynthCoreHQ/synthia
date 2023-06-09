@@ -13,10 +13,10 @@ export const Guild = database.define(
             defaultValue: '&',
             allowNull: false,
         },
-        welcomeChannelId: {
-            type: DataTypes.STRING,
-            unique: true,
-        },
+        welcomeChannelId: DataTypes.STRING,
+        adminRole: DataTypes.STRING,
+        requestsChannelId: DataTypes.STRING,
+        musicVoiceId: DataTypes.STRING,
     },
     {
         timestamps: false,

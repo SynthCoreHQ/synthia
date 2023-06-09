@@ -1,5 +1,6 @@
 import { Events } from 'discord.js';
 import { BaseEvent } from '../../helpers/base/BaseEvent.js';
+// import { Guild } from '../../database/models/guild.js';
 
 export default class InteractionCreateEvent extends BaseEvent {
     constructor(DiscordjsClient) {
@@ -71,7 +72,7 @@ export default class InteractionCreateEvent extends BaseEvent {
 
                 command.executeCommand(interaction);
             } catch (err) {
-                client.logger.error(err);
+                client.logger.error('INTERACTION_CREATE', err);
                 return await interaction.reply({
                     content: `An error occured while executing ${interaction.commandName} command.`,
                 });
@@ -185,6 +186,20 @@ export default class InteractionCreateEvent extends BaseEvent {
                     content: 'Music Stopped!',
                     // ephemeral: true,
                 });
+            }
+        } else if (interaction.isAutocomplete()) {
+            // eslint-disable-next-line max-len
+            const command = this.client.interactionCommands.get(interaction.commandName);
+
+            if (!command) {
+                console.error(`No command matching ${interaction.commandName} was found.`);
+                return;
+            }
+
+            try {
+                await command.autocomplete(interaction);
+            } catch (e) {
+                console.error(e);
             }
         }
     }

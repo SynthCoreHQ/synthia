@@ -17,16 +17,16 @@ export default class DisconnectCommand extends InteractionCommand {
         const { client } = this;
 
         try {
-            client.music.voices.leave(interaction.guild);
+            // await interaction.reply({
+            //     embeds: [
+            //         new EmbedBuilder()
+            //             .setTitle(`${client.emotes.right} | Disconnected...`)
+            //             .setColor(client.config.commands.embeds.aestheticColor),
+            //     ],
+            //     ephemeral: true,
+            // });
 
-            await interaction.reply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setTitle(`${client.emotes.right} | Disconnected...`)
-                        .setColor(client.config.commands.embeds.aestheticColor),
-                ],
-                ephemeral: true,
-            });
+            return await interaction.reply('This command is under development!');
         } catch (e) {
             client.logger.error(e.stack);
         }

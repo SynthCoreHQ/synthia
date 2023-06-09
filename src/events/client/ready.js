@@ -1,6 +1,5 @@
 import chalk from 'chalk';
 import { ActivityType, Events } from 'discord.js';
-import { Afk } from '../../database/models/afk.js';
 import { BaseEvent } from '../../helpers/base/BaseEvent.js';
 
 export default class ReadyEvent extends BaseEvent {
@@ -21,6 +20,8 @@ export default class ReadyEvent extends BaseEvent {
             this.client.logger.debug(`${chalk.magentaBright('Guild')}: ${guild.name} (${guild.id})`);
         });
 
-        Afk.sync();
+        this.client.database.sync().then(() => {
+            this.client.logger.info(`${chalk.greenBright('Database')}`, 'Database has been synchronized.');
+        });
     }
 }

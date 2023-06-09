@@ -14,7 +14,7 @@ export default class VolumeCommand extends InteractionCommand {
                 description: 'Specify a digit between 0-100',
                 type: ApplicationCommandOptionType.Integer,
                 min_value: 1, // eslint-disable-line camelcase
-                max_value: 100, // eslint-disable-line camelcase
+                max_value: 200, // eslint-disable-line camelcase
             },
         ];
     }
@@ -27,26 +27,23 @@ export default class VolumeCommand extends InteractionCommand {
         const volume = interaction.options.getInteger('input');
 
         try {
-            const queue = client.music.getQueue(interaction.guild);
+            const queue = this.client.player.nodes.get(interaction.guild.id);
 
             if (!queue) {
-                return await interaction.reply({
-                    content: `${client.emotes.wrong} | The queue is empty right now!`,
-                    ephemeral: true,
-                });
+                return await interaction.reply('Empty Queue!');
             }
 
             if (!volume) {
                 return await interaction.reply({
-                    content: `Current Volume: ${queue.volume}%`,
+                    content: `Current Volume: ${queue.node.volume}%`,
                 });
             }
 
-            queue.setVolume(volume);
+            queue.node.setVolume(volume);
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                        .setTitle(`${client.emotes.right} | Set the volume to ${queue.volume}%`)
+                        .setTitle(`${client.emotes.right} | Set the volume to ${queue.node.volume}%`)
                         .setColor(client.config.commands.embeds.aestheticColor),
                 ],
                 ephemeral: true,

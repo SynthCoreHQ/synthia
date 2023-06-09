@@ -15,3 +15,8 @@ const client = new Client(
     }, data);
 
 client.initialize({ token: data.token });
+
+process.on('warning', (warning) => {
+    console.log(warning.stack);
+});
+

@@ -12,6 +12,7 @@ export default class HelpCommand extends InteractionCommand {
                 name: 'command',
                 description: 'Is there any specific command name you wanna get info about?',
                 type: ApplicationCommandOptionType.String,
+                // choices: this.client.interactionCommands.map,
             },
         ];
     }

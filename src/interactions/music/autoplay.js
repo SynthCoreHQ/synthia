@@ -17,26 +17,25 @@ export default class AutoplayCommand extends InteractionCommand {
         const { client } = this;
 
         try {
-            const queue = client.music.getQueue(interaction.guild);
+            // const queue = this.client.player.nodes.get(interaction.guild.id);
 
-            if (!queue) {
-                return await interaction.reply({
-                    content: `${client.emotes.wrong} | The queue is empty right now!`,
-                    ephemeral: true,
-                });
-            }
+            // if (!queue) {
+            //     return await interaction.reply('Empty Queue!');
+            // }
 
-            const autoplay = queue.toggleAutoplay();
-            await interaction.reply({
-                embeds: [
-                    new EmbedBuilder()
-                        .setTitle(`${client.emotes.right} | Autoplay: \`${autoplay
-                            ? 'On'
-                            : 'Off'}\``)
-                        .setColor(client.config.commands.embeds.aestheticColor),
-                ],
-                ephemeral: true,
-            });
+            // const autoplay = queue.node;
+            // return await interaction.reply({
+            //     embeds: [
+            //         new EmbedBuilder()
+            //             .setTitle(`${client.emotes.right} | Autoplay: \`${autoplay
+            //                 ? 'On'
+            //                 : 'Off'}\``)
+            //             .setColor(client.config.commands.embeds.aestheticColor),
+            //     ],
+            //     ephemeral: true,
+            // });
+
+            return await interaction.reply('This command is under development!');
         } catch (e) {
             client.logger.error(e.stack);
         }

@@ -15,22 +15,20 @@ export default class NowplayingCommand extends InteractionCommand {
      */
     async executeCommand(interaction) {
         const { client } = this;
+        const queue = this.client.player.nodes.get(interaction.guild.id);
+
+        if (!queue || !queue.node.isPlaying()) {
+            return await interaction.reply('Empty Queue!');
+        }
 
         try {
-            const queue = client.music.getQueue(interaction.guild);
-
-            if (!queue) {
-                return await interaction.reply({
-                    content: `${client.emotes.wrong} | The queue is empty right now!`,
-                    ephemeral: true,
-                });
-            }
-
-            const song = queue.songs[0];
+            const track = queue.currentTrack;
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                        .setTitle(`${client.emotes.right} | Now Playing: ${bold(inlineCode(song.name))}, by ${hyperlink(song.user.username, `https://discord.com/users/${song.user.id}`)}`)
+                        .setTitle(client.config.commands.embeds.title.replace(/{text}/, 'NowPlaying'))
+                        .setURL(track.url)
+                        .setDescription(`${track.title}\nPlayed by: ${track.requestedBy.toString()}\n${queue.node.createProgressBar()}`)
                         .setColor(client.config.commands.embeds.aestheticColor),
                 ],
                 ephemeral: true,

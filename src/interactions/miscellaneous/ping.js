@@ -15,24 +15,17 @@ export default class PingCommand extends InteractionCommand {
         const { config } = this.client;
 
         try {
-            await interaction.reply({ embeds: [{ title: 'Pinging...', color: this.client.config.commands.embeds.aestheticColor }] }).then(
-                (msg) => {
-                    setTimeout(async () => {
-                        await msg.edit({
-                            embeds: [
-                                {
-                                    title: config.commands.embeds.title.replace(/{text}/, 'Ping'),
-                                    description: [
-                                        '> **Websocket Ping**: {ping}ms'.replace(/{ping}/, this.client.ws.ping),
-                                        '> **Api Latency**: {latency}ms'.replace(/{latency}/, (msg.createdTimestamp - interaction.createdTimestamp)),
-                                    ].join('\n'),
-                                    color: config.commands.embeds.aestheticColor,
-                                },
-                            ],
-                        });
-                    }, 5000);
-                },
-            );
+            await interaction.reply({
+                embeds: [
+                    {
+                        title: config.commands.embeds.title.replace(/{text}/, 'Ping'),
+                        description: [
+                            '> **Websocket Ping**: {ping}ms'.replace(/{ping}/, this.client.ws.ping),
+                        ].join('\n'),
+                        color: config.commands.embeds.aestheticColor,
+                    },
+                ],
+            });
         } catch (e) {
             this.client.logger.error(e);
         }

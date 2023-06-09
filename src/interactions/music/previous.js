@@ -1,18 +1,16 @@
-import { EmbedBuilder } from 'discord.js';
 import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 
-export default class SkipCommand extends InteractionCommand {
+export default class PreviousCommand extends InteractionCommand {
     constructor(DiscordjsClient) {
         super(DiscordjsClient);
-
-        this.name = 'skip';
-        this.description = 'Wanna skip to the next song? Use me to do so!';
+        this.name = 'previous';
+        this.description = 'Wanna listen the previous song again? Use me to do so!';
         this.module = 'Music';
     }
 
     /**
-     * @param {import('discord.js').ChatInputCommandInteraction} interaction
-     */
+    * @param {import('discord.js').ChatInputCommandInteraction} interaction
+    */
     async executeCommand(interaction) {
         const UserVoiceChannel = interaction.member.voice.channel;
         const BotVoiceChannel = interaction.guild.members.me.voice.channel;
@@ -23,17 +21,17 @@ export default class SkipCommand extends InteractionCommand {
 
         try {
             const queue = this.client.player.nodes.get(interaction.guild.id);
-            await interaction.deferReply();
 
             if (!queue || !queue.node.isPlaying()) {
-                return interaction.followUp('Empty Queue!');
+                return await interaction.reply('Empty Queue!');
             }
 
-            queue.node.skip();
+            await queue.history.previous();
 
-            return interaction.followUp(`Playing: ${queue.currentTrack}`);
+            return await interaction.reply(`Playing: ${queue.currentTrack}`);
         } catch (e) {
-            this.client.logger.error(e);
+            // this.client.logger.error(e);
+            await interaction.reply('No previous tracks!');
         }
     }
 }

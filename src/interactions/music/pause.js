@@ -15,18 +15,21 @@ export default class PauseCommand extends InteractionCommand {
      */
     async executeCommand(interaction) {
         const { client } = this;
+        const queue = this.client.player.nodes.get(interaction.guild.id);
+
+        if (!queue) {
+            return await interaction.reply('Empty Queue!');
+        }
 
         try {
-            const queue = client.music.getQueue(interaction.guild);
-
-            if (!queue) {
+            if (queue.node.isPaused()) {
                 return await interaction.reply({
-                    content: `${client.emotes.wrong} | The queue is empty right now!`,
+                    content: `${client.emotes.wrong} | The queue is already paused!`,
                     ephemeral: true,
                 });
             }
 
-            queue.pause();
+            queue.node.pause();
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()

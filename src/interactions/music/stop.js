@@ -17,16 +17,13 @@ export default class StopCommand extends InteractionCommand {
         const { client } = this;
 
         try {
-            const queue = client.music.getQueue(interaction.guild);
+            const queue = this.client.player.nodes.get(interaction.guild.id);
 
             if (!queue) {
-                return await interaction.reply({
-                    content: `${client.emotes.wrong} | The queue is empty right now!`,
-                    ephemeral: true,
-                });
+                return await interaction.reply('Empty Queue!');
             }
 
-            await queue.stop();
+            queue.delete();
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
