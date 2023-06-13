@@ -26,7 +26,7 @@ export default class AvatarCommand extends InteractionCommand {
         const avatarEmbed = new EmbedBuilder()
             .setTitle(user.username)
             .setImage(user.displayAvatarURL({ forceStatic: false, size: 512 }))
-            .setColor(this.client.config.commands.embeds.color);
+            .setColor(this.client.config.embeds.color);
 
         const avatarButtonComponent = new ButtonBuilder()
             .setLabel('Avatar URL')

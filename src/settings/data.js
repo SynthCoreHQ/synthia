@@ -21,24 +21,13 @@ const data = {
     },
     developmentGuildId: process.env['DEV_GUILD_ID'] || '',
     developers: ['953235785782534174'],
-    commands: {
-        globalPrefix: process.env['COMMAND_PREFIX'] || '',
-        deployGlobally: true,
-        embeds: {
-            title: 'Synthia | {text}',
-            footer: 'Made with 💖 by {text}',
-            color: 0x2b2d31,
-            aestheticColor: 0xab60ff /* 0xe4aefc */,
-        },
-    },
-    voice: {
-        '24/7': true,
-        default: true,
-        volume: 100,
-    },
-    server: {
-        mode: true,
-        port: process.env['SERVER_PORT'] || '',
+    globalPrefix: process.env['COMMAND_PREFIX'] || '',
+    deployGlobally: true,
+    embeds: {
+        title: 'Synthia | {text}',
+        footer: 'Made with 💖 by {text}',
+        color: 0x2b2d31,
+        aestheticColor: 0xab60ff /* 0xe4aefc */,
     },
     logChannelId: '1113016576682246245',
     emotes: {
@@ -55,6 +44,18 @@ const data = {
         stop: '<:music_stop:1113369676358090772>',
         autoplay: '<:music_autoplay:1113371677997416518>',
     },
+    nodes: [
+        {
+            name: 'main',
+            url: 'narco.buses.rocks:2269',
+            auth: 'glasshost1984',
+        },
+        // {
+        //     name: 'lava1',
+        //     url: 'lava1.horizxon.studio:80',
+        //     auth: 'horizxon.studio',
+        // },
+    ],
 };
 
 export { data };

@@ -44,7 +44,7 @@ export default class VolumeCommand extends InteractionCommand {
                 embeds: [
                     new EmbedBuilder()
                         .setTitle(`${client.emotes.right} | Set the volume to ${queue.node.volume}%`)
-                        .setColor(client.config.commands.embeds.aestheticColor),
+                        .setColor(client.config.embeds.aestheticColor),
                 ],
                 ephemeral: true,
             });

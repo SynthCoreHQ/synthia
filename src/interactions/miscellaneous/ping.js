@@ -18,11 +18,11 @@ export default class PingCommand extends InteractionCommand {
             await interaction.reply({
                 embeds: [
                     {
-                        title: config.commands.embeds.title.replace(/{text}/, 'Ping'),
+                        title: config.embeds.title.replace(/{text}/, 'Ping'),
                         description: [
                             '> **Websocket Ping**: {ping}ms'.replace(/{ping}/, this.client.ws.ping),
                         ].join('\n'),
-                        color: config.commands.embeds.aestheticColor,
+                        color: config.embeds.aestheticColor,
                     },
                 ],
             });

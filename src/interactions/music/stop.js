@@ -28,7 +28,7 @@ export default class StopCommand extends InteractionCommand {
                 embeds: [
                     new EmbedBuilder()
                         .setTitle(`${client.emotes.right} | Stopped the music.`)
-                        .setColor(client.config.commands.embeds.aestheticColor),
+                        .setColor(client.config.embeds.aestheticColor),
                 ],
                 ephemeral: true,
             });

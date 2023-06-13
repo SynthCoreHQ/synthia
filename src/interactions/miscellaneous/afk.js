@@ -37,7 +37,7 @@ export default class AfkCommand extends InteractionCommand {
                 embeds: [
                     {
                         description: "You're now afk!",
-                        color: this.client.config.commands.embeds.color,
+                        color: this.client.config.embeds.color,
                     },
                 ],
             });
@@ -48,7 +48,7 @@ export default class AfkCommand extends InteractionCommand {
                 embeds: [
                     {
                         description: "You're no longer afk.",
-                        color: this.client.config.commands.embeds.color,
+                        color: this.client.config.embeds.color,
                     },
                 ],
             });

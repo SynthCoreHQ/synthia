@@ -12,6 +12,6 @@ export default class TestCommand extends InteractionCommand {
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
     async executeCommand(interaction) {
-        interaction.reply('Test success!');
+        await this.broadcastRespone(interaction, { message: 'This command is made for testing purposes!', hidden: true });
     }
 }

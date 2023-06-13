@@ -7,6 +7,7 @@ export default class HelpCommand extends InteractionCommand {
 
         this.name = 'help';
         this.description = 'Wanna get some help? Use me to do so!';
+        this.module = 'Information';
         this.options = [
             {
                 name: 'command',
@@ -30,7 +31,7 @@ export default class HelpCommand extends InteractionCommand {
                 return await interaction.reply({
                     embeds: [
                         new EmbedBuilder()
-                            .setTitle(this.client.config.commands.embeds.title.replace(/{text}/, 'Help Command'))
+                            .setTitle(this.client.config.embeds.title.replace(/{text}/, 'Help Command'))
                             .setDescription([
                                 "I'm **@Synthia**, A sleek and sophisticated Discord bot designed to make your server experience even better.",
                             ].join('\n'))
@@ -45,7 +46,7 @@ export default class HelpCommand extends InteractionCommand {
                                 },
                             ])
                             .setThumbnail(this.client.config.icon)
-                            .setColor(this.client.config.commands.embeds.aestheticColor), // eslint-disable-line max-len
+                            .setColor(this.client.config.embeds.aestheticColor), // eslint-disable-line max-len
                     ],
                     components: [
                         new ActionRowBuilder()
@@ -58,13 +59,13 @@ export default class HelpCommand extends InteractionCommand {
                                 new ButtonBuilder()
                                     .setLabel('Support Server')
                                     .setStyle(ButtonStyle.Link)
-                                    .setURL(this.client.config.guild.inviteCode),
+                                    .setURL(this.client.config.guild.inviteCode), // eslint-disable-line max-len
                             ]),
                     ],
                 });
             }
 
-            const specificCommand = this.client.interactionCommands.get(command.toLowerCase());
+            const specificCommand = this.client.interactionCommands.get(command.toLowerCase()); // eslint-disable-line max-len
 
             if (!specificCommand) {
                 return await interaction.reply({
@@ -76,14 +77,14 @@ export default class HelpCommand extends InteractionCommand {
             return await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                        .setTitle(this.client.config.commands.embeds.title.replace(/{text}/, 'Help Command'))
+                        .setTitle(this.client.config.embeds.title.replace(/{text}/, 'Help Command'))
                         .setDescription([
                             "I'm **@Synthia**, A sleek and sophisticated Discord bot designed to make your server experience even better.",
                         ].join('\n'))
                         .setThumbnail(this.client.config.icon)
-                        .setColor(this.client.config.commands.embeds.aestheticColor),
+                        .setColor(this.client.config.embeds.aestheticColor), // eslint-disable-line max-len
                     new EmbedBuilder()
-                        .setTitle(this.client.config.commands.embeds.title.replace(/{text}/, 'Command Information'))
+                        .setTitle(this.client.config.embeds.title.replace(/{text}/, 'Command Information'))
                         .setDescription([
                             `> **Name**: ${specificCommand.name}`,
                             `> **Description**: ${specificCommand.description}`,
@@ -98,7 +99,7 @@ export default class HelpCommand extends InteractionCommand {
                             // `> Is Developer Only: ${specificCommand.developerOnly}`,
                         ].join('\n'))
                         // .setThumbnail(client.config.icon)
-                        .setColor(this.client.config.commands.embeds.color),
+                        .setColor(this.client.config.embeds.color),
                 ],
                 components: [
                     new ActionRowBuilder()

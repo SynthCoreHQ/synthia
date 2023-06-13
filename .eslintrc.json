@@ -21,7 +21,7 @@
             2,
             "never"
         ],
-        "curly": 2,
+        // "curly": 2,
         "eol-last": 2,
         "eqeqeq": [
             2,

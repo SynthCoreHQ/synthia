@@ -21,7 +21,7 @@ export default class DisconnectCommand extends InteractionCommand {
             //     embeds: [
             //         new EmbedBuilder()
             //             .setTitle(`${client.emotes.right} | Disconnected...`)
-            //             .setColor(client.config.commands.embeds.aestheticColor),
+            //             .setColor(client.config.embeds.aestheticColor),
             //     ],
             //     ephemeral: true,
             // });

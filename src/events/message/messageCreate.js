@@ -16,14 +16,14 @@ export default class MessageCreateEvent extends BaseEvent {
     async executeEvent(message) {
         const { client } = this;
 
-        const defaultPrefix = client.config.commands.globalPrefix;
+        const defaultPrefix = client.config.globalPrefix;
 
-        if (message.mentions.members.some(x => x.id === client.user.id)) {
+        if (message.content === `<@${client.user.id}>`) {
             try {
                 await message.reply({
                     embeds: [
                         new EmbedBuilder()
-                            .setTitle(client.config.commands.embeds.title.replace(/{text}/, 'Introduction'))
+                            .setTitle(client.config.embeds.title.replace(/{text}/, 'Introduction'))
                             .setDescription([
                                 `Hey ${message.author}, Do you need any kind of help?`,
                             ].join('\n'))
@@ -44,8 +44,8 @@ export default class MessageCreateEvent extends BaseEvent {
                                 },
                             ])
                             .setThumbnail(client.config.icon)
-                            .setColor(client.config.commands.embeds['aestheticColor'])
-                            .setFooter({ text: client.config.commands.embeds.footer.replace(/{text}/, 'SynthCore') }),
+                            .setColor(client.config.embeds['aestheticColor'])
+                            .setFooter({ text: client.config.embeds.footer.replace(/{text}/, 'SynthCore') }),
                     ],
                 });
             } catch (er) {
@@ -61,7 +61,7 @@ export default class MessageCreateEvent extends BaseEvent {
                 embeds: [
                     {
                         description: "You're no longer afk.",
-                        color: client.config.commands.embeds.color,
+                        color: client.config.embeds.color,
                     },
                 ],
             });
@@ -79,7 +79,7 @@ export default class MessageCreateEvent extends BaseEvent {
                         embeds: [
                             {
                                 description: `${u.displayName} is currently afk, reason: ${data.reason}`,
-                                color: client.config.commands.embeds.color,
+                                color: client.config.embeds.color,
                             },
                         ],
                         tts: true,

@@ -30,12 +30,12 @@ export default class AutoplayCommand extends InteractionCommand {
             //             .setTitle(`${client.emotes.right} | Autoplay: \`${autoplay
             //                 ? 'On'
             //                 : 'Off'}\``)
-            //             .setColor(client.config.commands.embeds.aestheticColor),
+            //             .setColor(client.config.embeds.aestheticColor),
             //     ],
             //     ephemeral: true,
             // });
 
-            return await interaction.reply('This command is under development!');
+            return await this.broadcastRespone(interaction, { message: 'This Command is under development' });
         } catch (e) {
             client.logger.error(e.stack);
         }

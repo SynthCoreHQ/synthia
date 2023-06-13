@@ -19,4 +19,3 @@ client.initialize({ token: data.token });
 process.on('warning', (warning) => {
     console.log(warning.stack);
 });
-

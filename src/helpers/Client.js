@@ -59,13 +59,13 @@ export class Client extends DiscordjsClient {
     async initialize({ token }) {
         try {
             await this.interactionHandler.registerInteractions(
-                this.config.commands.deployGlobally,
+                this.config.deployGlobally,
                 this.config.id,
                 this.config.developmentGuildId,
             );
             await this.interactionHandler.loadInteractions();
             await this.eventHandler.loadEvents();
-            await this.player.extractors.loadDefault();
+            // await this.player.extractors.loadDefault();
             await this.authenticate(token);
         } catch (err) {
             this.logger.error(err);
@@ -116,5 +116,9 @@ export class Client extends DiscordjsClient {
             );
 
         return componentRow.toJSON();
+    }
+
+    getInteractionCommand(commandName) {
+        return this.interactionCommands.get(commandName.toLowerCase());
     }
 }

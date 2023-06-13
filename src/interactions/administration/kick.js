@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, bold, inlineCode } from 'discord.js';
 import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 
 export default class KickCommand extends InteractionCommand {
@@ -32,9 +32,20 @@ export default class KickCommand extends InteractionCommand {
             const reason = interaction.options.getString('reason') || 'N/A';
 
             await interaction.guild.members.kick(member, reason);
-            await interaction.reply(`${member.displayName} has been kicked!\n\nReason: **${reason}**\nAdmin: ${interaction.user.username}`);
+            // await interaction.reply(`${member.displayName} has been kicked!\n\nReason: **${reason}**\nAdmin: ${interaction.user.username}`);
+
+            return await this.broadcastRespone(interaction, {
+                message: [
+                    `${bold(member.displayName)} has been kicked!`,
+                    '',
+                    `> ${bold('Reason')}: ${inlineCode(reason)}`,
+                    `> ${bold('Admin')}: ${inlineCode(interaction.user.username)}`,
+                ].join('\n'),
+                hidden: true,
+            });
         } catch (e) {
-            this.client.logger.error(e);
+            // this.client.logger.error(e);
+            console.error(e);
         }
     }
 }

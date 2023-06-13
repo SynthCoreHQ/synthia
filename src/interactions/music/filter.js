@@ -1,5 +1,5 @@
 /* eslint-disable indent */
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, bold } from 'discord.js';
 import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 import { AudioFilters } from 'discord-player';
 
@@ -44,48 +44,68 @@ export default class FilterCommand extends InteractionCommand {
     * @param {import('discord.js').ChatInputCommandInteraction} interaction
     */
     async executeCommand(interaction) {
+        const { player } = this.client;
         const opt = interaction.options.getSubcommand(true);
-
-        const queue = this.client.player.nodes.get(interaction.guild.id);
+        const filterName = interaction.options.getString('filter_name');
+        const queue = player.nodes.get(interaction.guild.id);
 
         if (!queue || !queue.node.isPlaying()) {
-            return await interaction.reply('Empty Queue!');
+            return await this.broadcastRespone(interaction, {
+                message: 'Empty/Paused Queue!', hidden: true,
+            });
         }
-
-
-        const filters = queue.filters.ffmpeg.getFiltersEnabled();
-        // const disabledFilters = queue.filters.ffmpeg.getFiltersDisabled();
-
-        // const enabledFilterList = filters.map((f) => `${f}: ${this.client.emotes.right}`).join('\n');
-        // const disabledFilterList = disabledFilters.map((f) => `${f}: ${this.client.emotes.wrong}`).join('\n');
 
         switch (opt) {
             case 'clear':
-                if (!filters.length) {
-                    return await interaction.reply('No filters applied currently!');
-                }
-
-                queue.filters.ffmpeg.setFilters(false);
-                await interaction.reply('Cleared filters!');
+                await player._clearFilters({ queue: queue, state: true });
+                await this.broadcastRespone(interaction, { message: 'Cleared all the enabled filters!', hidden: true });
                 break;
 
             case 'toggle':
-                // eslint-disable-next-line no-case-declarations
-                const filterName = interaction.options.getString('filter_name');
-
-                queue.filters.ffmpeg.toggle(filterName);
-                await interaction.reply(`Toggle the ${filterName} audio filter!`);
+                await player._toggleSongFilter({ filter: filterName, queue: queue }); // eslint-disable-line max-len
+                await this.broadcastRespone(interaction, { message: `Toggle the ${filterName} audio filter!`, hidden: true });
                 break;
 
             default:
-                await interaction.reply(`Audio Filters List:\n${AudioFilters.names.join('\n')}`);
+                // await this.broadcastEmbeddedRespone(interaction, {
+                //     embedData: [player._getFilterList({ queue: queue })],
+                //     hidden: true,
+                // });
+                await interaction.reply({
+                    // embeds: [player._getFilterList({ queue: queue })],
+                    embeds: [
+                        {
+                            title: this.client.config.embeds.title.replace(/{text}/, 'Filters'),
+                            color: this.client.config.embeds.aestheticColor,
+                            // description: [
+                            //     'Enabled: ',
+                            //     queue.filters.ffmpeg.getFiltersEnabled().map(fName => `> ${bold(fName)}: ${this.client.emotes.right}`).join('\n') || 'None',
+                            //     '',
+                            //     'Disabled: ',
+                            //     queue.filters.ffmpeg.getFiltersDisabled().map(fName => `> \` ${fName} \` - ${this.client.emotes.wrong}`).join('\n'),
+                            // ].join('\n'),
+                            fields: [
+                                {
+                                    name: 'Enabled Filters',
+                                    value: queue.filters.ffmpeg.getFiltersEnabled().map(fName => `> \` ${fName} \` - ${this.client.emotes.right}`).join('\n') || '` N/A `',
+                                    inline: true,
+                                },
+                                {
+                                    name: 'Disabled Filters',
+                                    value: queue.filters.ffmpeg.getFiltersDisabled().map(fName => `> \` ${fName} \` - ${this.client.emotes.wrong}`).slice(0, 20).join('\n') || 'N/A',
+                                    inline: true,
+                                },
+                            ],
+                            thumbnail: {
+                                url: this.client.user.displayAvatarURL(),
+                            },
+                            footer: {
+                                text: this.client.config.embeds.footer.replace(/{text}/, 'SynthCore'),
+                            },
+                        },
+                    ],
+                });
                 break;
-        }
-
-        try {
-            return await interaction.reply('This command is under development right now!');
-        } catch (e) {
-            this.client.logger.error('FILTER_COMMAND', e);
         }
     }
 }

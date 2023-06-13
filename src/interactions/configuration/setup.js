@@ -1,6 +1,6 @@
 import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
-import { Guild } from '../../database/models/guild.js';
-import { ApplicationCommandOptionType, codeBlock } from 'discord.js';
+// import { Guild } from '../../database/models/guild.js';
+// import { ApplicationCommandOptionType, codeBlock } from 'discord.js';
 
 export default class SetupCommand extends InteractionCommand {
     constructor(DiscordjsClient) {
@@ -16,7 +16,7 @@ export default class SetupCommand extends InteractionCommand {
     */
     async executeCommand(interaction) {
         try {
-            await interaction.reply('Configuring the guild...');
+            await interaction.reply('Configuration Setup started!');
 
             const collector = interaction.channel.createMessageCollector(
                 { time: 10_000 },

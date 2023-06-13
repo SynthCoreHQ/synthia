@@ -29,7 +29,7 @@ export default class AsciiCommand extends InteractionCommand {
                     embeds: [
                         {
                             description: 'Something went wrong.',
-                            color: this.client.config.commands.embeds.color,
+                            color: this.client.config.embeds.color,
                         },
                     ],
                     ephemeral: true,
@@ -40,7 +40,7 @@ export default class AsciiCommand extends InteractionCommand {
                 embeds: [
                     {
                         description: ['```', data, '```'].join('\n'),
-                        color: this.client.config.commands.embeds.color,
+                        color: this.client.config.embeds.color,
                     },
                 ],
             });

@@ -1,4 +1,4 @@
-import { ApplicationCommandOptionType } from 'discord.js';
+import { ApplicationCommandOptionType, bold, inlineCode } from 'discord.js';
 import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 
 export default class BanCommand extends InteractionCommand {
@@ -28,11 +28,23 @@ export default class BanCommand extends InteractionCommand {
      */
     async executeCommand(interaction) {
         try {
-            const member = interaction.options.getMember('user');
-            const reason = interaction.options.getString('reason') || 'N/A';
+            const member = interaction.options.getUser('user');
+            const reason = interaction.options.getString('reason') || '';
 
             await interaction.guild.members.ban(member, { reason: reason });
-            return await interaction.reply(`${member.displayName} has been banned!\n\nReason: **${reason}**\nAdmin: ${interaction.user}`);
+
+            return await this.broadcastRespone(interaction, {
+                message: [
+                    `${bold(member.username)} has been banned!`,
+                    '',
+                    `> ${bold('Reason')}: ${inlineCode(reason || 'No Reason')}`,
+                    `> ${bold('Admin')}: ${inlineCode(interaction.user.username)}`,
+                    `> ${bold('Timestamp')}: <t:${Math.round(interaction.createdTimestamp / 1000)}:R>`,
+                ].join('\n'),
+                // hidden: true,
+            });
+
+            // return await interaction.reply(`${member.displayName} has been banned!\n\nReason: **${reason}**\nAdmin: ${interaction.user}`);
         } catch (e) {
             this.client.logger.error(e);
         }

@@ -34,7 +34,7 @@ export default class PauseCommand extends InteractionCommand {
                 embeds: [
                     new EmbedBuilder()
                         .setTitle(`${client.emotes.right} | Paused!`)
-                        .setColor(client.config.commands.embeds.aestheticColor),
+                        .setColor(client.config.embeds.aestheticColor),
                 ],
                 ephemeral: true,
             });

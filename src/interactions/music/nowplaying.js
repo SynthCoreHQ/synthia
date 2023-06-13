@@ -26,10 +26,10 @@ export default class NowplayingCommand extends InteractionCommand {
             await interaction.reply({
                 embeds: [
                     new EmbedBuilder()
-                        .setTitle(client.config.commands.embeds.title.replace(/{text}/, 'NowPlaying'))
+                        .setTitle(client.config.embeds.title.replace(/{text}/, 'NowPlaying'))
                         .setURL(track.url)
                         .setDescription(`${track.title}\nPlayed by: ${track.requestedBy.toString()}\n${queue.node.createProgressBar()}`)
-                        .setColor(client.config.commands.embeds.aestheticColor),
+                        .setColor(client.config.embeds.aestheticColor),
                 ],
                 ephemeral: true,
             });

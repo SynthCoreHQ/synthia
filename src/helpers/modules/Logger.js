@@ -81,6 +81,8 @@ export class Logger {
             return await errorLogChannel.send('An error occurred but was too long to send to Discord, check your console.');
         }
 
+        console.error(error.stack);
+
         return await errorLogChannel.send({
             embeds: [
                 {

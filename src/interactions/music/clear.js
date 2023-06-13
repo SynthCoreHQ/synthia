@@ -15,17 +15,11 @@ export default class ClearCommand extends InteractionCommand {
         try {
             const queue = this.client.player.nodes.get(interaction.guild.id);
 
-            if (!queue || !queue.node.isPlaying()) {
-                return await interaction.reply('Empty Queue!');
-            }
+            await this.client.player._clearMusicQueue(interaction, {
+                queue: queue,
+            });
 
-            if (queue.size < 2) {
-                return await interaction.reply('The queue has no more tracks!');
-            }
-
-            queue.tracks.clear();
-
-            return await interaction.reply('Cleared the queue!');
+            return await this.broadcastRespone(interaction, { message: 'Cleared the queue!', hidden: true });
         } catch (e) {
             this.client.logger.error(e);
         }

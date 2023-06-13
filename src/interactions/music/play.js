@@ -1,6 +1,5 @@
 import { ApplicationCommandOptionType } from 'discord.js';
 import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
-import { QueryType } from 'discord-player';
 
 export default class PlayCommand extends InteractionCommand {
     constructor(DiscordjsClient) {
@@ -9,12 +8,15 @@ export default class PlayCommand extends InteractionCommand {
         this.name = 'play';
         this.description = 'Wanna listen some songs? Use me to do so!';
         this.module = 'Music';
+        this.inVoiceChannel = true;
+        this.matchVoiceChannel = true;
         this.options = [
             {
                 name: 'query',
                 description: 'Any song name in mind?',
                 type: ApplicationCommandOptionType.String,
                 autocomplete: true,
+                required: true,
             },
         ];
     }
@@ -24,51 +26,26 @@ export default class PlayCommand extends InteractionCommand {
      */
     // eslint-disable-next-line max-statements
     async executeCommand(interaction) {
-        const { client } = this;
+        const { player } = this.client;
+
         const query = interaction.options.getString('query', true);
-        const UserVoiceChannel = interaction.member.voice.channel;
-        const BotVoiceChannel = interaction.guild.members.me.voice.channel;
+        const trackResults = await player.search(query, {
+            searchEngine: 'AUTO',
+            requestedBy: interaction.user,
+        });
 
-        if (BotVoiceChannel && UserVoiceChannel.id !== BotVoiceChannel.id) {
-            return interaction.reply('You must be in the same voice channel as the bot.');
+        await interaction.deferReply();
+
+        if (!trackResults.hasTracks()) {
+            return await this.broadcastRespone(interaction, { message: `Couldn't find tracks for ${query}`, hidden: true });
         }
 
-        const searchResult = await client.player.search(
-            query,
-            {
-                requestedBy: interaction.user,
-                searchEngine: QueryType.AUTO,
-            },
-        );
+        await player._playSong(interaction, {
+            channel: interaction.member.voice.channel,
+            tracks: trackResults,
+        });
 
-        try {
-            await interaction.deferReply();
-
-            if (!searchResult.hasTracks()) {
-                return interaction.followUp(`We didnt find tracks for ${query}`);
-            } else {
-                await client.player.play(
-                    UserVoiceChannel,
-                    searchResult,
-                    {
-                        nodeOptions: {
-                            metadata: interaction.channel,
-                            leaveOnEnd: true,
-                            leaveOnEndCooldown: 50_000,
-                            volume: 50,
-                        },
-                    },
-                );
-
-                return interaction.followUp({
-                    content: `Added ${searchResult.tracks[0]}`,
-                    ephemeral: true,
-                });
-            }
-        } catch (e) {
-            client.logger.error(e.stack);
-            return interaction.followUp({ content: 'Something went wrong...', ephemeral: true });
-        }
+        return await this.broadcastRespone(interaction, { message: `Searching ${trackResults.tracks[0]}...`, hidden: true });
     }
 
     /**

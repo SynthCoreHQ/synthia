@@ -35,7 +35,7 @@ export default class InteractionCreateEvent extends BaseEvent {
                         embeds: [
                             {
                                 description: 'This command can only be used by bot developers.',
-                                color: client.config.commands.embeds.color,
+                                color: client.config.embeds.color,
                             },
                         ],
                     });
@@ -46,14 +46,25 @@ export default class InteractionCreateEvent extends BaseEvent {
                         embeds: [
                             {
                                 description: 'This command has been disabled & can no longer be used by anyone.',
-                                color: client.config.commands.embeds.color,
+                                color: client.config.embeds.color,
                             },
                         ],
                     });
                 }
 
-                if (command.inVoice && !interaction.member.voice.channel) {
+                if (
+                    command.inVoiceChannel
+                    && !interaction.member.voice.channel
+                ) {
                     return await interaction.reply('Must be in a voice channel!');
+                }
+
+                if (
+                    command.matchVoiceChannel
+                    && interaction.guild.members.me.voice.channel
+                    && interaction.member.voice.channelId !== interaction.guild.members.me.voice.channelId // eslint-disable-line max-len
+                ) {
+                    return await interaction.reply('Must be in same voice channel!');
                 }
 
                 if (
@@ -64,13 +75,17 @@ export default class InteractionCreateEvent extends BaseEvent {
                         embeds: [
                             {
                                 description: 'This command can only be used by server owners.',
-                                color: client.config.commands.embeds.color,
+                                color: client.config.embeds.color,
                             },
                         ],
                     });
                 }
 
-                command.executeCommand(interaction);
+                if (command.module === 'Music') {
+                    return await interaction.reply('The Music module is under development currently');
+                } else {
+                    command.executeCommand(interaction);
+                }
             } catch (err) {
                 client.logger.error('INTERACTION_CREATE', err);
                 return await interaction.reply({
