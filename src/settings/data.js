@@ -43,6 +43,7 @@ const data = {
         previous: '<:music_previous:1113369552353501235>',
         stop: '<:music_stop:1113369676358090772>',
         autoplay: '<:music_autoplay:1113371677997416518>',
+        delete: '<:delete:1118390964151648458>',
     },
     nodes: [
         {

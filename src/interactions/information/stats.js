@@ -64,7 +64,8 @@ export default class StatsCommand extends InteractionCommand {
                 .addComponents(
                     new ButtonBuilder()
                         .setCustomId('refresh')
-                        .setLabel('Refresh')
+                        // .setLabel('Refresh')
+                        .setEmoji(this.client.config.emotes.autoplay)
                         .setStyle(ButtonStyle.Primary),
 
                     new ButtonBuilder()
@@ -79,7 +80,8 @@ export default class StatsCommand extends InteractionCommand {
 
                     new ButtonBuilder()
                         .setCustomId('delete')
-                        .setLabel('Delete')
+                        // .setLabel('Delete')
+                        .setEmoji(this.client.config.emotes.delete)
                         .setStyle(ButtonStyle.Danger),
                 );
 
@@ -88,7 +90,7 @@ export default class StatsCommand extends InteractionCommand {
             });
 
             // eslint-disable-next-line max-len
-            const collector = interaction.channel.createMessageComponentCollector({ time: 60_000 });
+            const collector = interaction.channel.createMessageComponentCollector({ time: 10_000 });
 
             collector.on('collect', async (i) => {
                 if (i.user.id !== interaction.user.id) return i.reply({ content: 'You cannot use this button.', ephemeral: true });
@@ -103,7 +105,7 @@ export default class StatsCommand extends InteractionCommand {
             });
 
             collector.on('end', async () => {
-                await interaction.editReply({ content: 'Time Out.', embeds: [], components: [] });
+                await interaction.deleteReply();
             });
         } catch (e) {
             // this.client.logger.error(e);
