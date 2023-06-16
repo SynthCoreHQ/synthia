@@ -1,5 +1,4 @@
 import { ApplicationCommandOptionType } from 'discord.js';
-import { Afk } from '../../database/models/afk.js';
 import { InteractionCommand } from '../../helpers/base/InteractionCommand.js';
 
 export default class AfkCommand extends InteractionCommand {
@@ -21,37 +20,6 @@ export default class AfkCommand extends InteractionCommand {
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
     async executeCommand(interaction) {
-        const reason = interaction.options.getString('reason') || 'I am afk.';
-
-        const afkData = await Afk.findOne({
-            where: { id: interaction.user.id },
-        });
-
-        if (!afkData) {
-            await Afk.create({
-                id: interaction.user.id,
-                reason: reason,
-            });
-
-            await interaction.reply({
-                embeds: [
-                    {
-                        description: "You're now afk!",
-                        color: this.client.config.embeds.color,
-                    },
-                ],
-            });
-        } else {
-            await Afk.destroy({ where: { id: interaction.user.id } });
-
-            return interaction.reply({
-                embeds: [
-                    {
-                        description: "You're no longer afk.",
-                        color: this.client.config.embeds.color,
-                    },
-                ],
-            });
-        }
+        return await interaction.reply({ content: 'This command is currently disabled.' });
     }
 }

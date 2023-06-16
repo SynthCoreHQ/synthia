@@ -52,6 +52,17 @@ export default class InteractionCreateEvent extends BaseEvent {
                     });
                 }
 
+                if (this.client.cooldown(command, interaction.user)) {
+                    return await interaction.reply({
+                        embeds: [
+                            {
+                                description: `You are on cooldown! Please wait ${this.client.cooldown(command, interaction.user)} seconds before using this command again.`,
+                                color: client.config.embeds.color,
+                            },
+                        ],
+                    });
+                }
+
                 if (
                     command.inVoiceChannel
                     && !interaction.member.voice.channel

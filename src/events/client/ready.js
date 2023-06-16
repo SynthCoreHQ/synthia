@@ -20,8 +20,8 @@ export default class ReadyEvent extends BaseEvent {
             this.client.logger.debug(`${chalk.magentaBright('Guild')}: ${guild.name} (${guild.id})`);
         });
 
-        this.client.database.sync().then(() => {
-            this.client.logger.info(`${chalk.greenBright('Database')}`, 'Database has been synchronized.');
+        this.client.guilds.cache.each(async (guild) => {
+            await this.client.ensureGuildData(guild.id);
         });
     }
 }

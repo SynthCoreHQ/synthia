@@ -10,7 +10,7 @@ export class InteractionCommand {
 
         this.type = ApplicationCommandType.ChatInput;
         this.module = 'Miscellaneous';
-        this.cooldown = 5_000;
+        this.cooldown = 5;
         this.disabled = false;
     }
 

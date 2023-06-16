@@ -1,5 +1,4 @@
-import { EmbedBuilder, Events, codeBlock } from 'discord.js';
-import { Afk } from '../../database/models/afk.js';
+import { EmbedBuilder, Events } from 'discord.js';
 import { BaseEvent } from '../../helpers/base/BaseEvent.js';
 
 export default class MessageCreateEvent extends BaseEvent {
@@ -14,101 +13,130 @@ export default class MessageCreateEvent extends BaseEvent {
      */
     // eslint-disable-next-line max-statements
     async executeEvent(message) {
-        const { client } = this;
+        if (message.author.bot) return;
 
-        const defaultPrefix = client.config.globalPrefix;
+        const guildData = await this.client.guildData.ensure(message.guildId, {
+            prefix: this.client.config.globalPrefix,
+            welcome: {
+                enabled: false,
+                channel: null,
+                message: null,
+            },
+            leave: {
+                enabled: false,
+                channel: null,
+                message: null,
+            },
+        });
 
-        if (message.content === `<@${client.user.id}>`) {
-            try {
-                await message.reply({
-                    embeds: [
-                        new EmbedBuilder()
-                            .setTitle(client.config.embeds.title.replace(/{text}/, 'Introduction'))
-                            .setDescription([
-                                `Hey ${message.author}, Do you need any kind of help?`,
-                            ].join('\n'))
-                            .addFields([
-                                {
-                                    name: 'Prefix',
-                                    value: `${codeBlock(defaultPrefix)}`,
-                                },
-                                {
-                                    name: 'Modules',
-                                    value: [
-                                        '> 1. Utility',
-                                        '> 2. Music',
-                                        '> 3. Moderation',
-                                        '> 4. Configuration',
-                                        '> 5. Administration',
-                                    ].join('\n'),
-                                },
-                            ])
-                            .setThumbnail(client.config.icon)
-                            .setColor(client.config.embeds['aestheticColor'])
-                            .setFooter({ text: client.config.embeds.footer.replace(/{text}/, 'SynthCore') }),
-                    ],
-                });
-            } catch (er) {
-                client.logger.error(er);
-            }
-        }
+        const dynamicPrefix = message.guild
+            ? guildData.prefix
+            : this.client.config.globalPrefix;
 
-        const afkData = await Afk.findOne({ where: { id: message.author.id } });
-
-        if (afkData) {
-            await Afk.destroy({ where: { id: message.author.id } });
-            await message.reply({
+        if (message.content === `<@!${this.client.user.id}>` || message.content === `<@${this.client.user.id}>`) {
+            return message.channel.send({
                 embeds: [
-                    {
-                        description: "You're no longer afk.",
-                        color: client.config.embeds.color,
-                    },
+                    new EmbedBuilder()
+                        .setTitle('Prefix')
+                        .setDescription(`My prefix is \`${dynamicPrefix}\``)
+                        .setColor('Aqua'),
                 ],
             });
         }
 
-        message.mentions.members.forEach(async (u) => {
-            if (
-                !message.content.includes('@here') &&
-                !message.content.includes('@everyone')
-            ) {
-                const data = await Afk.findOne({ where: { id: u.id } });
+        if (!message.content.startsWith(dynamicPrefix)) return;
 
-                if (data) {
-                    await message.reply({
-                        embeds: [
-                            {
-                                description: `${u.displayName} is currently afk, reason: ${data.reason}`,
-                                color: client.config.embeds.color,
-                            },
-                        ],
-                        tts: true,
-                    });
-                }
-            }
-        });
+        // eslint-disable-next-line max-len
+        const args = message.content.slice(dynamicPrefix.length).trim().split(/ +/g);
+        const commandName = args.shift().toLowerCase();
 
-        if (
-            message.author.bot
-            || !message.guild
-            || !message.content.startsWith(defaultPrefix)
+        // eslint-disable-next-line max-len
+        const command = this.client.messageCommands.get(commandName) || this.client.messageCommands.get(this.client.aliases.get(commandName));
 
-        ) {
-            return;
+        if (!command) {
+            return message.channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription(`There is no command with name \`${commandName}\`.`)
+                        .setColor('Red'),
+                ],
+            });
         }
 
-        const args = message.content.slice(defaultPrefix.length).trim().split(/ +/g); // eslint-disable-line max-len
-        const command = args.shift().toLowerCase();
-        const cmd = client.commands.get(command);
+        if (command.guildOnly && !message.guild) {
+            return message.channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription('This command is only available in servers.')
+                        .setColor('Red'),
+                ],
+            });
+        }
 
-        if (!cmd) {
-            return;
+        if (command.ownerOnly && message.author.id !== message.guild.ownerId) {
+            return message.channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription('This command is only available to server owner.')
+                        .setColor('Red'),
+                ],
+            });
+        }
+
+        if (command.nsfw && !message.channel.nsfw) {
+            return message.channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription('This command is only available in NSFW channels.')
+                        .setColor('Red'),
+                ],
+            });
+        }
+
+        if (command.args && !args.length) {
+            let reply = 'You did not provide any arguments.';
+
+            if (command.usage) {
+                reply += `\nThe proper usage would be: \`${dynamicPrefix}${command.name} ${command.usage}\``;
+            }
+
+            return message.channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription(reply)
+                        .setColor('Red'),
+                ],
+            });
+        }
+
+        if (this.client.cooldown(command, message.author)) {
+            return message.channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription(`Please wait ${this.client.cooldown(command, message.author)} more second(s) before reusing the \`${command.name}\` command.`)
+                        .setColor('Red'),
+                ],
+            });
         }
 
         try {
-            cmd.execute(client, message);
-        } catch (e) {
-            client.logger.error(e);
+            await command.executeCommand(message, args);
+        } catch (error) {
+            console.error(error);
+            message.channel.send({
+                embeds: [
+                    new EmbedBuilder()
+                        .setTitle('Error')
+                        .setDescription('There was an error trying to execute that command.')
+                        .setColor('Red'),
+                ],
+            });
         }
     }
 }

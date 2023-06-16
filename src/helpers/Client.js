@@ -6,7 +6,9 @@ import { data } from '../settings/data.js'; // eslint-disable-line no-unused-var
 import { Logger } from './modules/Logger.js';
 import { EventHandler } from './modules/EventHandler.js';
 import { InteractionHandler } from './modules/InteractionHandler.js';
-import { database } from '../database/database.js';
+import { MessageHandler } from './modules/MessageHandler.js';
+import Josh from '@joshdb/core';
+import provider from '@joshdb/sqlite';
 
 const require = createRequire(import.meta.url);
 
@@ -21,16 +23,19 @@ export class Client extends DiscordjsClient {
         this.config = config;
         this.emotes = require('../settings/emotes.json');
         this.rest = new REST({ version: '10' }).setToken(this.config.token);
-        this.database = database;
         this.eventHandler = new EventHandler(this);
         this.interactionHandler = new InteractionHandler(this);
+        this.messageHandler = new MessageHandler(this);
         this.player = new MusicPlayer(this);
         this.logger = new Logger(this, 'https://discord.com/api/webhooks/1113016614137380867/VDOeTnkvYh-KEjXn8MAhGoUpkoNzeknMNELCJ8tIzqdDyBaS4dpDfrkWlVQzkFAfLrJE');
-        this.commands = new Collection();
         this.interactionCommands = new Collection();
         this.messageCommands = new Collection();
         this.aliases = new Collection();
         this.cooldowns = new Collection();
+        this.guildData = new Josh({
+            name: 'guilds',
+            provider,
+        });
     }
 
     async authenticate(token) {
@@ -38,10 +43,6 @@ export class Client extends DiscordjsClient {
             if (!token) {
                 throw new Error('No Client Token was provided.');
             }
-
-            await this.database.authenticate().then(() => {
-                this.logger.info(`${chalk.cyanBright('Authenticator')}`, 'Database has been authenticated.');
-            });
 
             await this.login(token)
                 .then(() => {
@@ -64,8 +65,8 @@ export class Client extends DiscordjsClient {
                 this.config.developmentGuildId,
             );
             await this.interactionHandler.loadInteractions();
+            await this.messageHandler.loadCommands();
             await this.eventHandler.loadEvents();
-            // await this.player.extractors.loadDefault();
             await this.authenticate(token);
         } catch (err) {
             this.logger.error(err);
@@ -120,5 +121,50 @@ export class Client extends DiscordjsClient {
 
     getInteractionCommand(commandName) {
         return this.interactionCommands.get(commandName.toLowerCase());
+    }
+
+    async ensureGuildData(guildId) {
+        await this.guildData.ensure(guildId, {
+            prefix: this.config.globalPrefix,
+            welcome: {
+                enabled: false,
+                channel: null,
+                message: null,
+            },
+            leave: {
+                enabled: false,
+                channel: null,
+                message: null,
+            },
+        });
+    }
+
+    // eslint-disable-next-line max-statements
+    cooldown(command, user) {
+        if (!this.cooldowns.has(command.name)) {
+            this.cooldowns.set(command.name, new Collection());
+        }
+
+        const now = Date.now();
+        const timestamps = this.cooldowns.get(command.name);
+        const cooldownAmount = command.cooldown * 1000;
+
+        if (timestamps.has(user.id)) {
+            const expirationTime = timestamps.get(user.id) + cooldownAmount;
+
+            if (now < expirationTime) {
+                const timeLeft = (expirationTime - now) / 1000;
+
+                return timeLeft;
+            } else {
+                timestamps.set(user.id, now);
+                setTimeout(() => timestamps.delete(user.id), cooldownAmount);
+                return false;
+            }
+        } else {
+            timestamps.set(user.id, now);
+            setTimeout(() => timestamps.delete(user.id), cooldownAmount);
+            return false;
+        }
     }
 }

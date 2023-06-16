@@ -49,7 +49,6 @@ export class InteractionHandler extends BaseHandler {
     async loadInteractions() {
         const { logger } = this.client;
         const { interactionCommands } = this.paths;
-        let count = 0;
 
         try {
             const files = this._loadFilesRecusrive(interactionCommands);
@@ -61,11 +60,10 @@ export class InteractionHandler extends BaseHandler {
                 if (!command.name || !command.description) {
                     throw new ReferenceError(`Class ${chalk.greenBright(command.constructor.name)} does not have the required properties 'name' & 'description'.`);
                 }
-                count++;
                 this.client.interactionCommands.set(command.name, command);
             }
 
-            logger.info(chalk.redBright('InteractionHandler'), `(${count}) commands loaded.`);
+            logger.info(chalk.redBright('InteractionHandler'), `(${this.client.interactionCommands.size}) commands loaded.`);
         } catch (err) {
             logger.error(err);
         }
