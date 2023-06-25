@@ -1,5 +1,6 @@
 import { ActivityType, Events } from 'discord.js';
 import { Event } from '../../helpers/Event.js';
+import { Client } from '../../helpers/client/Client.js';
 
 export default class ReadyEvent extends Event {
     constructor(discordClient, configuration) {
@@ -9,8 +10,15 @@ export default class ReadyEvent extends Event {
         this.once = true;
     }
 
+    /**
+     * @param {Client} client
+     */
     async execute(client) {
         client.logger.info(import.meta.url, `${client.user.username} has been started!`);
+
+        client.guilds.cache.forEach(async (guild) => {
+            await client.guild_data.ensure(`${guild.id}`, this.configuration.default_guild_data)
+        })
 
         const activities = [
             {
