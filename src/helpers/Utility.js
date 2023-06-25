@@ -66,7 +66,7 @@ export class Utility {
      * @param {{ target: discordJs.GuildMember, type: 'timeout' | 'kick' | 'ban' | 'remove_roles', reason: string, time: number }} options
      */
     async punish(guild, options) {
-        const member = await this.resolve_member(guild, options.target);
+        const member = await this.resolve_member(guild, options.target.id);
 
         if (!member.manageable || member.roles.highest.position >= guild.members.me.roles.highest.position) return false;
         if (options.type === 'kick' && !member.kickable) return false;
