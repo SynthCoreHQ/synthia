@@ -1,21 +1,6 @@
-import { data } from './settings/data.js';
-import { Client } from './helpers/Client.js';
-import { Partials } from 'discord.js';
+import { Client } from './helpers/client/Client.js';
+import * as config from './settings/config.js';
 
-const client = new Client(
-    {
-        intents: ['Guilds', 'GuildMembers', 'GuildMessages', 'MessageContent', 'GuildVoiceStates'],
-        partials: [
-            Partials.User,
-            Partials.Channel,
-            Partials.Message,
-            Partials.GuildMember,
-        ],
-        allowedMentions: { parse: ['everyone', 'users', 'roles'], repliedUser: false },
-    }, data);
+const client = new Client(config.client_options, config);
 
-client.initialize({ token: data.token });
-
-process.on('warning', (warning) => {
-    console.log(warning.stack);
-});
+client.initialize({ token: config.token });

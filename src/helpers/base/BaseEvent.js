@@ -2,7 +2,7 @@ import chalk from 'chalk';
 
 export class BaseEvent {
     /**
-     * @param {import('../Client.js').Client} DiscordjsClient
+     * @param {import('../client/Client.js').Client} DiscordjsClient
      */
     constructor(DiscordjsClient) {
         this.client = DiscordjsClient;

@@ -1,9 +1,9 @@
 import { Events } from 'discord.js';
-import { BaseEvent } from '../../helpers/base/BaseEvent.js';
+import { Event } from '../../helpers/Event.js';
 
-export default class WarnEvent extends BaseEvent {
-    constructor(DiscordjsClient) {
-        super(DiscordjsClient);
+export default class WarnEvent extends Event {
+    constructor(discordClient, configuration) {
+        super(discordClient, configuration);
 
         this.name = Events.Warn;
     }
@@ -11,7 +11,7 @@ export default class WarnEvent extends BaseEvent {
     /**
      * @param {string} message
      */
-    async executeEvent(message) {
-        this.client.logger.warn(message);
+    async execute(client, message) {
+        client.logger.warn(import.meta.url, message);
     }
 }

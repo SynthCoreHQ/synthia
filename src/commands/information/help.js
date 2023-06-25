@@ -16,7 +16,7 @@ export default class HelpCommand extends MessageCommand {
      * @param {import('discord.js').Message} message
      * @param {string[]} args
      */
-    async executeCommand(message, args) {
+    async executeCommand(client, message, args) {
         const command = args[0];
 
         if (!command) {

@@ -57,7 +57,7 @@ export class Logger {
         /**
          * @type {import('discord.js').TextChannel}
          */
-        const errorLogChannel = await this.client.channels.fetch(logChannelId);
+        const errorLogChannel = await this.client.channels.fetch('1119265264744284170');
 
         if (!errorLogChannel) {
             return console.error(this.log(chalk.bgRed.bold('ERR!'), `[${type}] ${error}`));

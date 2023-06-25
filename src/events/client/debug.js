@@ -1,9 +1,9 @@
 import { Events } from 'discord.js';
-import { BaseEvent } from '../../helpers/base/BaseEvent.js';
+import { Event } from '../../helpers/Event.js';
 
-export default class DebugEvent extends BaseEvent {
-    constructor(DiscordjsClient) {
-        super(DiscordjsClient);
+export default class DebugEvent extends Event {
+    constructor(discordClient, configuration) {
+        super(discordClient, configuration);
 
         this.name = Events.Debug;
     }
@@ -11,11 +11,7 @@ export default class DebugEvent extends BaseEvent {
     /**
      * @param {string} message
      */
-    async executeEvent(message) {
-        try {
-            this.client.logger.debug(message);
-        } catch (err) {
-            this.client.logger.error(err);
-        }
+    async execute(client, message) {
+        client.logger.debug(import.meta.url, message);
     }
 }

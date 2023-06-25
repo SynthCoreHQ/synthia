@@ -6,33 +6,28 @@
     "type": "module",
     "scripts": {
         "start": "node -r dotenv/config .",
-        "dev": "nodemon -r dotenv/config . --debug",
-        "lint": "eslint ./src --ext .js",
-        "lint:fix": "eslint ./src --ext .js --fix"
+        "dev": "nodemon -r dotenv/config .",
+        "debug": "node --inspect -r dotenv/config ."
     },
     "keywords": [],
     "author": "SynthCore",
     "license": "ISC",
     "dependencies": {
-        "@discord-player/extractor": "^4.2.2",
         "@discordjs/opus": "^0.9.0",
         "@discordjs/voice": "^0.16.0",
         "@ffmpeg-installer/ffmpeg": "^1.1.0",
         "@joshdb/core": "^1.2.7",
-        "@joshdb/sqlite": "^1.1.9",
+        "@joshdb/json": "^1.0.5",
         "chalk": "^5.2.0",
-        "discord-player": "^6.3.1",
+        "discord-backup": "^3.3.2",
         "discord.js": "^14.11.0",
         "dotenv": "^16.0.3",
         "figlet": "^1.6.0",
         "libsodium-wrappers": "^0.7.11",
-        "sequelize": "^6.31.1",
         "shoukaku": "^3.4.0",
-        "sqlite3": "^5.1.6",
         "ytdl-core": "^4.11.4"
     },
     "devDependencies": {
-        "eslint": "^8.41.0",
         "nodemon": "^2.0.22"
     }
 }

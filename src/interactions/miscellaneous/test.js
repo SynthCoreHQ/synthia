@@ -12,6 +12,10 @@ export default class TestCommand extends InteractionCommand {
      * @param {import('discord.js').ChatInputCommandInteraction} interaction
      */
     async executeCommand(interaction) {
+        const database = await this.client.getData(this.client.guildData, interaction.guildId);
+
+        console.log(database);
+
         await this.broadcastRespone(interaction, { message: 'This command is made for testing purposes!', hidden: true });
     }
 }

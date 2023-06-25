@@ -1,27 +1,40 @@
-import chalk from 'chalk';
 import { ActivityType, Events } from 'discord.js';
-import { BaseEvent } from '../../helpers/base/BaseEvent.js';
+import { Event } from '../../helpers/Event.js';
 
-export default class ReadyEvent extends BaseEvent {
-    constructor(DiscordjsClient) {
-        super(DiscordjsClient);
+export default class ReadyEvent extends Event {
+    constructor(discordClient, configuration) {
+        super(discordClient, configuration);
 
         this.name = Events.ClientReady;
         this.once = true;
     }
 
-    async executeEvent() {
-        this.client.logger.info(chalk.greenBright('ClientReady'), `${chalk.cyan(this.client.user.username)} has been started!`);
-        this.client.user.setActivity({
-            name: this.client.config.presenceStatus,
-            type: ActivityType.Listening,
-        });
-        this.client.guilds.cache.each((guild) => {
-            this.client.logger.debug(`${chalk.magentaBright('Guild')}: ${guild.name} (${guild.id})`);
-        });
+    async execute(client) {
+        client.logger.info(import.meta.url, `${client.user.username} has been started!`);
 
-        this.client.guilds.cache.each(async (guild) => {
-            await this.client.ensureGuildData(guild.id);
-        });
+        const activities = [
+            {
+                name: `${this.configuration.default_prefix}help | theidiotguy`,
+                type: ActivityType.Streaming,
+                url: 'https://www.twitch.tv/discord'
+            },
+            {
+                name: `${this.configuration.default_prefix}ping | thory`,
+                type: ActivityType.Streaming,
+                url: 'https://www.twitch.tv/discord'
+            },
+            {
+                name: `${this.configuration.default_prefix}test | synthia`,
+                type: ActivityType.Streaming,
+                url: 'https://www.twitch.tv/discord'
+            }
+        ]
+
+        let i = 0;
+        setInterval(() => {
+            const activity = activities[i];
+            client.user.setActivity(activity);
+            i = ++i % activities.length;
+        }, 10000);
     }
 }
